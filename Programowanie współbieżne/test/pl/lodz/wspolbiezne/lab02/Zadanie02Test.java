@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import pl.lodz.wspolbiezne.lab02.Zadanie02;
+
 public class Zadanie02Test {
 
 	@Test
