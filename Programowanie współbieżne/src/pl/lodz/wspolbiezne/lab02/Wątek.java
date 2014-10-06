@@ -1,6 +1,6 @@
 package pl.lodz.wspolbiezne.lab02;
 
-public class Thread implements Runnable {
+public class W¹tek implements Runnable {
 
 	private int startIndex;
 	private int endIndex;
