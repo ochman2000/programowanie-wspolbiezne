@@ -21,13 +21,18 @@ public class Zadanie02 {
 	}
 	
 	public static int getBeginningOfInterval(int interval, int totalIntervals) {
-		int rozmiarPrzedzialu = ROZMIAR_TABLICY/totalIntervals;
-//		return interval/totalIntervals * ROZMIAR_TABLICY - rozmiarPrzedzialu;
-		return getEndOfInterval(interval, totalIntervals) - rozmiarPrzedzialu;
+		if (totalIntervals<=interval) {
+			throw new IllegalArgumentException("Przedzia³ nie mo¿e byæ wiêkszy ni¿: "
+					+totalIntervals+" a podano: "+interval);
+		}
+		double fraction = (double)interval/(double)totalIntervals;
+		return (int) (fraction * ROZMIAR_TABLICY);
 	}
 	
 	public static int getEndOfInterval(int interval, int totalIntervals) {
-		return interval/totalIntervals * ROZMIAR_TABLICY;
+		double rozmiarPrzedzialu = (double)ROZMIAR_TABLICY/(double)totalIntervals;
+		double fraction = (double)interval/(double)totalIntervals; 
+		return (int) ((fraction * ROZMIAR_TABLICY) + rozmiarPrzedzialu);
 	}
 	
 	public void runAll() {
