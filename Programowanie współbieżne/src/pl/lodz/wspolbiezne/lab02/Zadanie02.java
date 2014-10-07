@@ -5,7 +5,8 @@ import java.util.Random;
 public class Zadanie02 {
 	
 	private static int ROZMIAR_TABLICY = 4_000_000; 
-	private Thread[] thread;
+	private W¹tek[] threads;
+	private byte[] tablicaBajtow;
 
 	public static void main(String[] args) {
 		
@@ -13,14 +14,20 @@ public class Zadanie02 {
 	}
 	
 	public Zadanie02(int threadsNumber) {
-		thread = new Thread[threadsNumber];
-		byte[] tb = initTablicaBajtow();
+		tablicaBajtow = initTablicaBajtow();
+		threads = initThreads(threadsNumber);
+	}
+	
+
+	private W¹tek[] initThreads(int threadsNumber) {
+		W¹tek[] thread = new W¹tek[threadsNumber];
 		for (int interval=0; interval<threadsNumber; interval++) {
 			W¹tek w = new W¹tek();
 			w.setStartIndex(getBeginningOfInterval(interval, threadsNumber));
 			w.setEndIndex(getEndOfInterval(interval, threadsNumber));
-			thread[interval] = new Thread(w);
+			thread[interval] = w;
 		}
+		return thread;
 	}
 	
 	private byte[] initTablicaBajtow() {
@@ -45,6 +52,9 @@ public class Zadanie02 {
 	}
 	
 	public void startAll() {
-		for (Thread t : thread) { t.start(); }
+		for (W¹tek w : threads) {
+			Thread t = new Thread(w);
+			t.start(); 
+		}
 	}
 }
