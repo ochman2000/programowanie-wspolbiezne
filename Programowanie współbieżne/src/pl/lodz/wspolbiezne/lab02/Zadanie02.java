@@ -12,7 +12,7 @@ public class Zadanie02 {
 	private int[] histogram;
 
 	public static void main(String[] args) {
-		new Zadanie02(1);
+//		new Zadanie02(1);
 //		new Zadanie02(2);
 //		new Zadanie02(4);
 //		new Zadanie02(6);
@@ -20,16 +20,19 @@ public class Zadanie02 {
 //		new Zadanie02(10);
 //		new Zadanie02(12);
 //		new Zadanie02(14);
-//		new Zadanie02(16);
+		new Zadanie02(16);
 	}
 	
 	public Zadanie02(int threadsNumber) {
+		long startTime = System.currentTimeMillis();
 		histogram = new int[256];
 		tablicaBajtow = initTablicaBajtow();
 		threads = initThreads(threadsNumber);
 		startAll();
 		System.out.println(Arrays.toString(histogram));
-		System.out.println(IntStream.of(histogram).sum());
+		System.out.println("Liczba bajtów: "+IntStream.of(histogram).sum());
+		long endTime = System.currentTimeMillis();
+		System.out.println("Czas wykonania: "+(endTime-startTime)+"ms");
 	}
 	
 

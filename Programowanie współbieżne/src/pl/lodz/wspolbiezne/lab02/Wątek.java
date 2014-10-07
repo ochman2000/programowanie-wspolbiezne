@@ -10,11 +10,13 @@ public class W¹tek implements Runnable {
 	@Override
 	public void run() {
 		for (int i = startIndex; i < endIndex; i++) {
-			if ((tablicaBajtow[i] & 0xFF) <0 || (tablicaBajtow[i] & 0xFF) >255) {
-				throw new IllegalArgumentException("Wartoœæ indeksu tablicy poza zakresem 0-255: "+
-						(tablicaBajtow[i] & 0xFF));
+			if (Byte.toUnsignedInt(tablicaBajtow[i]) <0 
+					|| Byte.toUnsignedInt(tablicaBajtow[i]) >255) {
+				throw new IllegalArgumentException("Wartoœæ indeksu tablicy"
+						+ " poza zakresem 0-255: "+
+						Byte.toUnsignedInt(tablicaBajtow[i]));
 			}
-			histogram[tablicaBajtow[i] & 0xFF]++;
+			histogram[Byte.toUnsignedInt(tablicaBajtow[i])]++;
 		}
 	}
 	
