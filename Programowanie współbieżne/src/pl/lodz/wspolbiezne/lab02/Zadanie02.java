@@ -25,11 +25,7 @@ public class Zadanie02 {
 	
 	private byte[] initTablicaBajtow() {
 		byte[] tablicaBajtow = new byte[ROZMIAR_TABLICY];
-		Random rnd = new Random(128);
-		for (byte b : tablicaBajtow) {
-			//jak zainicjowaæ bajt? ¿eby mia³ liczby takie jak nale¿y, równie¿ ujemne?
-			b = rnd.nextBytes(arg0);
-		}
+		new Random().nextBytes(tablicaBajtow);
 		return tablicaBajtow;
 	}
 
