@@ -5,7 +5,11 @@ public class W¹tek implements Runnable {
 	private int startIndex;
 	private int endIndex;
 	private byte[] tablicaBajtow;
-	private byte[] histogram;
+	private int[] histogram;
+	
+	public W¹tek() {
+		histogram = new int[256];
+	}
 	
 	@Override
 	public void run() {
@@ -38,11 +42,11 @@ public class W¹tek implements Runnable {
 		this.tablicaBajtow = tablicaBajtow;
 	}
 
-	public byte[] getHistogram() {
+	public int[] getHistogram() {
 		return histogram;
 	}
 
-	public void setHistogram(byte[] histogram) {
+	public void setHistogram(int[] histogram) {
 		this.histogram = histogram;
 	}
 }

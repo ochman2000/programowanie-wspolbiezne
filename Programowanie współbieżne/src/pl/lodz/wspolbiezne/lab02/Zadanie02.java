@@ -9,13 +9,14 @@ public class Zadanie02 {
 	private byte[] tablicaBajtow;
 
 	public static void main(String[] args) {
-		
 
 	}
 	
 	public Zadanie02(int threadsNumber) {
 		tablicaBajtow = initTablicaBajtow();
 		threads = initThreads(threadsNumber);
+		startAll();
+		
 	}
 	
 
@@ -34,6 +35,12 @@ public class Zadanie02 {
 		byte[] tablicaBajtow = new byte[ROZMIAR_TABLICY];
 		new Random().nextBytes(tablicaBajtow);
 		return tablicaBajtow;
+	}
+	
+	private Histogram getHistogram() {
+		for (W¹tek w : threads) {
+			w.getHistogram();
+		}
 	}
 
 	public static int getBeginningOfInterval(int interval, int totalIntervals) {
