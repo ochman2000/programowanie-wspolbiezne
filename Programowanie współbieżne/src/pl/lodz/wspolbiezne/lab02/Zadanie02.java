@@ -13,6 +13,14 @@ public class Zadanie02 {
 
 	public static void main(String[] args) {
 		new Zadanie02(1);
+//		new Zadanie02(2);
+//		new Zadanie02(4);
+//		new Zadanie02(6);
+//		new Zadanie02(8);
+//		new Zadanie02(10);
+//		new Zadanie02(12);
+//		new Zadanie02(14);
+//		new Zadanie02(16);
 	}
 	
 	public Zadanie02(int threadsNumber) {
@@ -63,9 +71,11 @@ public class Zadanie02 {
 	}
 	
 	public void startAll() {
+		int i = 0;
 		for (W¹tek w : threads) {
 			Thread t = new Thread(w);
-			t.start(); 
+			t.start();
+			System.out.println("W¹tek "+ ++i+" uruchmiony");
 		}
 	}
 }
