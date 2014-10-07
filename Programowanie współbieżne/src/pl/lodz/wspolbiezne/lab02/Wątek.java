@@ -7,14 +7,14 @@ public class W¹tek implements Runnable {
 	private byte[] tablicaBajtow;
 	private int[] histogram;
 	
-	public W¹tek() {
-		histogram = new int[256];
-	}
-	
 	@Override
 	public void run() {
 		for (int i = startIndex; i < endIndex; i++) {
-			histogram[tablicaBajtow[i]]++;
+			if ((tablicaBajtow[i] & 0xFF) <0 || (tablicaBajtow[i] & 0xFF) >255) {
+				throw new IllegalArgumentException("Wartoœæ indeksu tablicy poza zakresem 0-255: "+
+						(tablicaBajtow[i] & 0xFF));
+			}
+			histogram[tablicaBajtow[i] & 0xFF]++;
 		}
 	}
 	

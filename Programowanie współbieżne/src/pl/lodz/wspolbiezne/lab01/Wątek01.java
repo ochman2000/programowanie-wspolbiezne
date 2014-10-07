@@ -1,4 +1,4 @@
-package pl.lodz.wspolbiezne;
+package pl.lodz.wspolbiezne.lab01;
 
 public class W¹tek01 implements Runnable {
 
