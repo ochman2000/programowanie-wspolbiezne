@@ -11,14 +11,14 @@ import java.util.stream.IntStream;
 public class Zadanie02 {
 
 	private static int ROZMIAR_TABLICY = 4_000_000;
-	private W¹tek[] threads;
+	private Thread[] threads;
 	private byte[] tablicaBajtow;
 	private int[] histogram;
 
 	public static void main(String[] args) {
-		new Zadanie02(1);
-		// new Zadanie02(2);
-		// new Zadanie02(4);
+//		new Zadanie02(1);
+//		new Zadanie02(2);
+		new Zadanie02(4);
 		// new Zadanie02(6);
 		// new Zadanie02(8);
 		// new Zadanie02(10);
@@ -33,25 +33,49 @@ public class Zadanie02 {
 		tablicaBajtow = initTablicaBajtow();
 		threads = initThreads(threadsNumber);
 		startAll();
-		System.out.println(Arrays.toString(histogram));
-		System.out.println("Liczba bajtów: " + IntStream.of(histogram).sum());
-		long endTime = System.currentTimeMillis();
-		System.out.println("Czas wykonania: " + (endTime - startTime) + "ms");
+		printSummary(startTime);
 	}
 
-	private W¹tek[] initThreads(int threadsNumber) {
-		if (threadsNumber < 0) {
+	private void printSummary(long startTime) {
+		for (Thread t : threads) {
+			try {
+				t.join(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if (areNotAlive()) {
+			System.out.println(Arrays.toString(histogram));
+			System.out.println("Liczba bajtów: " + IntStream.of(histogram).sum());
+			long endTime = System.currentTimeMillis();
+			System.out.println("Czas wykonania: " + (endTime - startTime) + "ms");
+		}
+	}
+	
+	private boolean areNotAlive() {
+		for (Thread w : threads) {
+			if (w.isAlive()) {
+				System.out.println("W¹tek jest alive");
+				return false;
+			}
+		}
+		System.out.println("Wszystkie w¹tki s¹ dead.");
+		return true;
+	}
+
+	private Thread[] initThreads(int threadsNumber) {
+		if (threadsNumber < 1) {
 			throw new IllegalArgumentException(
 					"Liczb¹ w¹tków musi byæ wiêksza od 0");
 		}
-		W¹tek[] thread = new W¹tek[threadsNumber];
+		Thread[] thread = new Thread[threadsNumber];
 		for (int interval = 0; interval < threadsNumber; interval++) {
 			W¹tek w = new W¹tek();
 			w.setStartIndex(getBeginningOfInterval(interval, threadsNumber));
 			w.setEndIndex(getEndOfInterval(interval, threadsNumber));
 			w.setTablicaBajtow(tablicaBajtow);
 			w.setHistogram(histogram);
-			thread[interval] = w;
+			thread[interval] = new Thread(w);
 		}
 		return thread;
 	}
@@ -92,10 +116,9 @@ public class Zadanie02 {
 
 	public void startAll() {
 		int i = 0;
-		for (W¹tek w : threads) {
-			Thread t = new Thread(w);
+		for (Thread t : threads) {
 			t.start();
-			System.out.println("W¹tek " + ++i + " uruchmiony");
+			System.out.println("W¹tek " + ++i + " uruchomiony");
 		}
 	}
 }
