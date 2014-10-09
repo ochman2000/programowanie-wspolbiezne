@@ -13,8 +13,8 @@ public class Zadanie02 {
 	private long startTime;
 	private Thread[] threads;
 	private byte[] tablicaBajtow;
-	private int[] histogram;
-	private static int threadCounter;
+	private volatile int[] histogram;
+	private static volatile int threadCounter;
 
 	public static void main(String[] args) {
 //		new Zadanie02(1);
@@ -117,15 +117,15 @@ public class Zadanie02 {
 		this.startTime = startTime;
 	}
 
-	public static int getThreadCounter() {
+	public static synchronized int getThreadCounter() {
 		return threadCounter;
 	}
 
-	public static void setThreadCounter(int threadCounter) {
+	public static synchronized void setThreadCounter(int threadCounter) {
 		Zadanie02.threadCounter = threadCounter;
 	}
 	
-	public static int decrementThreadCounter() {
+	public static synchronized int decrementThreadCounter() {
 		return --threadCounter;
 	}
 }
