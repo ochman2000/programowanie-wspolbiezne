@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Zadanie02 {
 
+	private static final String SCIEZKA_DO_PLIKU = "resources/bajty.dat";
 	private static int ROZMIAR_TABLICY = 4_000_000;
+	private long startTime;
 	private Thread[] threads;
 	private byte[] tablicaBajtow;
 	private int[] histogram;
+	private static int threadCounter;
 
 	public static void main(String[] args) {
 //		new Zadanie02(1);
@@ -28,40 +29,25 @@ public class Zadanie02 {
 	}
 
 	public Zadanie02(int threadsNumber) {
-		long startTime = System.currentTimeMillis();
+		setThreadCounter(threadsNumber);
+		setStartTime(System.currentTimeMillis());
 		histogram = new int[256];
 		tablicaBajtow = initTablicaBajtow();
 		threads = initThreads(threadsNumber);
 		startAll();
-		printSummary(startTime);
 	}
 
-	private void printSummary(long startTime) {
-		for (Thread t : threads) {
-			try {
-				t.join(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		if (areNotAlive()) {
-			System.out.println(Arrays.toString(histogram));
-			System.out.println("Liczba bajtów: " + IntStream.of(histogram).sum());
-			long endTime = System.currentTimeMillis();
-			System.out.println("Czas wykonania: " + (endTime - startTime) + "ms");
-		}
-	}
 	
-	private boolean areNotAlive() {
-		for (Thread w : threads) {
-			if (w.isAlive()) {
-				System.out.println("W¹tek jest alive");
-				return false;
-			}
-		}
-		System.out.println("Wszystkie w¹tki s¹ dead.");
-		return true;
-	}
+//	private boolean areNotAlive() {
+//		for (Thread w : threads) {
+//			if (w.isAlive()) {
+//				System.out.println("W¹tek jest alive");
+//				return false;
+//			}
+//		}
+//		System.out.println("Wszystkie w¹tki s¹ dead.");
+//		return true;
+//	}
 
 	private Thread[] initThreads(int threadsNumber) {
 		if (threadsNumber < 1) {
@@ -71,6 +57,7 @@ public class Zadanie02 {
 		Thread[] thread = new Thread[threadsNumber];
 		for (int interval = 0; interval < threadsNumber; interval++) {
 			W¹tek w = new W¹tek();
+			w.setStartTime(startTime);
 			w.setStartIndex(getBeginningOfInterval(interval, threadsNumber));
 			w.setEndIndex(getEndOfInterval(interval, threadsNumber));
 			w.setTablicaBajtow(tablicaBajtow);
@@ -81,7 +68,7 @@ public class Zadanie02 {
 	}
 
 	private byte[] initTablicaBajtow() {
-		Path path = Paths.get("resources/bajty.dat");
+		Path path = Paths.get(SCIEZKA_DO_PLIKU);
 		byte[] bajty = null;
 		try {
 			if (!Files.exists(path)) {
@@ -120,5 +107,25 @@ public class Zadanie02 {
 			t.start();
 			System.out.println("W¹tek " + ++i + " uruchomiony");
 		}
+	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	public static int getThreadCounter() {
+		return threadCounter;
+	}
+
+	public static void setThreadCounter(int threadCounter) {
+		Zadanie02.threadCounter = threadCounter;
+	}
+	
+	public static int decrementThreadCounter() {
+		return --threadCounter;
 	}
 }
