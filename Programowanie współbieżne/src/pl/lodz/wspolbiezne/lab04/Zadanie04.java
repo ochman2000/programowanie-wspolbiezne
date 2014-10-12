@@ -1,6 +1,6 @@
 package pl.lodz.wspolbiezne.lab04;
 
-public class Zadanie02 {
+public class Zadanie04 {
 
 	public static void main(String[] args) {
 		long pause = 500;
