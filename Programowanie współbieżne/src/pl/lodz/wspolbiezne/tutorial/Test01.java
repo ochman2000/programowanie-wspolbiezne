@@ -6,9 +6,9 @@ public class Test01 {
 
 		MySignal mySignal = new MySignal();
 		
-		MyThread a = new MyThread(mySignal);
+//		MyThread a = new MyThread(mySignal);
 //		MyThread b = new MyThread(mySignal);
-		a.start();
+//		a.start();
 //		b.start();
 		try {
 			Thread.sleep(500);
