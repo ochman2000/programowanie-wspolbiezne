@@ -6,10 +6,9 @@ public class Test01 {
 
 		MySignal mySignal = new MySignal();
 		
-//		MyThread a = new MyThread(mySignal);
-//		MyThread b = new MyThread(mySignal);
-//		a.start();
-//		b.start();
+		MyThread a = new MyThread(mySignal);
+		a.start();
+		
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
