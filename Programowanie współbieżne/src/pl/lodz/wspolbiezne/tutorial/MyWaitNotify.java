@@ -2,7 +2,7 @@ package pl.lodz.wspolbiezne.tutorial;
 
 public class MyWaitNotify {
 
-	MonitorObject myMonitorObject = new MonitorObject();
+	private MonitorObject myMonitorObject = new MonitorObject();
 
 	public void doWait() {
 		synchronized (myMonitorObject) {

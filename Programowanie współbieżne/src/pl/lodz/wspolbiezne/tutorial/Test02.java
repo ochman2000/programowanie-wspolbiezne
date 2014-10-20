@@ -6,20 +6,22 @@ public class Test02 {
 
 		MyWaitNotify mySignal = new MyWaitNotify();
 		
-		MyThread a = new MyThread(){
+		Thread a = new Thread(){
 			@Override
 			public void run() {
 				for (int i=0; i<100000; i++) {
-					System.out.println("Thread A!");
+					mySignal.doWait();
+					System.out.println("\t\tThread A: "+i);
 				}
 			}
 		};
 		
-		MyThread b = new MyThread(){
+		Thread b = new Thread(){
 			@Override
 			public void run() {
 				for (int i=0; i<100000; i++) {
-					System.out.println("Thread B!");
+					mySignal.doNotify();
+					System.out.println("Thread B: "+ i);
 				}
 			}
 		};
@@ -27,6 +29,11 @@ public class Test02 {
 //		new Thread(() -> System.out.println("Hello world !")).start();
 
 		a.start();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		b.start();
 	}
 }
