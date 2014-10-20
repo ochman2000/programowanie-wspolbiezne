@@ -10,30 +10,23 @@ public class Test02 {
 			@Override
 			public void run() {
 				for (int i=0; i<100000; i++) {
-					mySignal.doWait();
-					System.out.println("\t\tThread A: "+i);
+					System.out.println("Thread A: "+i);
 				}
+				mySignal.doNotify();
 			}
 		};
 		
 		Thread b = new Thread(){
 			@Override
 			public void run() {
+				mySignal.doWait();
 				for (int i=0; i<100000; i++) {
-					mySignal.doNotify();
-					System.out.println("Thread B: "+ i);
+					System.out.println("Thread B: "+ i+"\t\tThread A finished...");
 				}
 			}
 		};
-		
-//		new Thread(() -> System.out.println("Hello world !")).start();
 
-		a.start();
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		b.start();
+		a.start();
 	}
 }
