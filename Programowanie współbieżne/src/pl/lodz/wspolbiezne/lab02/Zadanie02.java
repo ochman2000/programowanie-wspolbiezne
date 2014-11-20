@@ -95,6 +95,11 @@ public class Zadanie02 {
 	}
 
 	public static int getEndOfInterval(int interval, int totalIntervals) {
+		if (totalIntervals <= interval) {
+			throw new IllegalArgumentException(
+					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
+							+ " a podano: " + interval);
+		}
 		double rozmiarPrzedzialu = (double) ROZMIAR_TABLICY
 				/ (double) totalIntervals;
 		double fraction = (double) interval / (double) totalIntervals;

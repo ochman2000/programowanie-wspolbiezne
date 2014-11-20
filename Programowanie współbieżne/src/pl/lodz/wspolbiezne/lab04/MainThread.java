@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import pl.lodz.wspolbiezne.lab02.Zadanie02;
+
 public class MainThread {
 
 	private static final String SCIEZKA_DO_PLIKU = "resources/bajty.dat";
@@ -64,20 +66,11 @@ public class MainThread {
 	}
 
 	public static int getBeginningOfInterval(int interval, int totalIntervals) {
-		if (totalIntervals <= interval) {
-			throw new IllegalArgumentException(
-					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
-							+ " a podano: " + interval);
-		}
-		double fraction = (double) interval / (double) totalIntervals;
-		return (int) (fraction * ROZMIAR_TABLICY);
+		return Zadanie02.getBeginningOfInterval(interval, totalIntervals);
 	}
 
 	public static int getEndOfInterval(int interval, int totalIntervals) {
-		double rozmiarPrzedzialu = (double) ROZMIAR_TABLICY
-				/ (double) totalIntervals;
-		double fraction = (double) interval / (double) totalIntervals;
-		return (int) ((fraction * ROZMIAR_TABLICY) + rozmiarPrzedzialu);
+		return Zadanie02.getEndOfInterval(interval, totalIntervals);
 	}
 
 	public void startAll() {
