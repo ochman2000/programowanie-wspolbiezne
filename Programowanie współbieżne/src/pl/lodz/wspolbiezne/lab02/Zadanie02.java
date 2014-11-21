@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Zadanie02 {
@@ -15,17 +17,25 @@ public class Zadanie02 {
 	private byte[] tablicaBajtow;
 	private volatile int[] histogram;
 	private static volatile int threadCounter;
+	private static final int liczbaPowtorzen = 100;
+	private static List<Long> raport;
 
 	public static void main(String[] args) {
-//		new Zadanie02(1);
-//		new Zadanie02(2);
-		new Zadanie02(4);
-		// new Zadanie02(6);
-		// new Zadanie02(8);
-		// new Zadanie02(10);
-		// new Zadanie02(12);
-		// new Zadanie02(14);
-		// new Zadanie02(160);
+		raport = new ArrayList<>(liczbaPowtorzen);
+		for (int i = 0; i < liczbaPowtorzen; i++) {
+			 new Zadanie02(1);
+//			 new Zadanie02(2);
+//			new Zadanie02(4);
+			// new Zadanie02(6);
+			// new Zadanie02(8);
+			// new Zadanie02(10);
+			// new Zadanie02(12);
+			// new Zadanie02(14);
+			// new Zadanie02(160);
+		}
+		for (long l : getRaport()) {
+			System.out.println(l);
+		}
 	}
 
 	public Zadanie02(int threadsNumber) {
@@ -36,18 +46,6 @@ public class Zadanie02 {
 		threads = initThreads(threadsNumber);
 		startAll();
 	}
-
-	
-//	private boolean areNotAlive() {
-//		for (Thread w : threads) {
-//			if (w.isAlive()) {
-//				System.out.println("W¹tek jest alive");
-//				return false;
-//			}
-//		}
-//		System.out.println("Wszystkie w¹tki s¹ dead.");
-//		return true;
-//	}
 
 	private Thread[] initThreads(int threadsNumber) {
 		if (threadsNumber < 1) {
@@ -110,7 +108,7 @@ public class Zadanie02 {
 		int i = 0;
 		for (Thread t : threads) {
 			t.start();
-			System.out.println("W¹tek " + ++i + " uruchomiony");
+			// System.out.println("W¹tek " + ++i + " uruchomiony");
 		}
 	}
 
@@ -129,8 +127,16 @@ public class Zadanie02 {
 	public static synchronized void setThreadCounter(int threadCounter) {
 		Zadanie02.threadCounter = threadCounter;
 	}
-	
+
 	public static synchronized int decrementThreadCounter() {
 		return --threadCounter;
+	}
+	
+	public static synchronized void add(long l) {
+		raport.add(l);
+	}
+	
+	public static synchronized List<Long> getRaport() {
+		return raport;
 	}
 }

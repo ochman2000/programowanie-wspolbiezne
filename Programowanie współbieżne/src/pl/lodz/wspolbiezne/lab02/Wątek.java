@@ -22,17 +22,32 @@ public class W¹tek implements Runnable {
 			}
 			histogram[Byte.toUnsignedInt(tablicaBajtow[i])]++;
 		}
-		System.out.println("Threads running: "+Zadanie02.getThreadCounter());
+//		System.out.println("Threads running: "+Zadanie02.getThreadCounter());
 		if (Zadanie02.decrementThreadCounter()==0) {
-			printSummary();
+//			printSummary();
+			getSummary();
 		}
 	}
 	
 	private void printSummary() {
-		System.out.println(Arrays.toString(histogram));
-		System.out.println("Liczba bajtów: " + IntStream.of(histogram).sum());
+		System.out.print(getSummary());
+	}
+	
+	private StringBuilder getSummary() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Arrays.toString(histogram));
+		sb.append("\n");
+		sb.append("Liczba bajtów: ");
+		sb.append(IntStream.of(histogram).sum());
+		sb.append("\n");
 		long endTime = System.currentTimeMillis();
-		System.out.println("Czas wykonania: " + (endTime - startTime) + "ms");
+		sb.append("Czas wykonania: ");
+		long czasWykonania = endTime - startTime;
+		Zadanie02.add(czasWykonania);
+		sb.append(czasWykonania);
+		sb.append("ms");
+		sb.append("\n");
+		return sb;
 	}
 	
 	public int getStartIndex() {
