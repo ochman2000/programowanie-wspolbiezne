@@ -22,16 +22,25 @@ public class Zadanie02 {
 
 	public static void main(String[] args) {
 		raport = new ArrayList<>(liczbaPowtorzen);
+		System.out.println("Trwa liczenie...");
 		for (int i = 0; i < liczbaPowtorzen; i++) {
-			 new Zadanie02(1);
-//			 new Zadanie02(2);
+			new Zadanie02(1);
+//			new Zadanie02(2);
 //			new Zadanie02(4);
-			// new Zadanie02(6);
-			// new Zadanie02(8);
-			// new Zadanie02(10);
-			// new Zadanie02(12);
-			// new Zadanie02(14);
-			// new Zadanie02(160);
+//			new Zadanie02(6);
+//			new Zadanie02(8);
+//			new Zadanie02(10);
+//			new Zadanie02(12);
+//			new Zadanie02(14);
+//			new Zadanie02(20);
+//			new Zadanie02(40);
+//			new Zadanie02(80);
+//			new Zadanie02(160);
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		for (long l : getRaport()) {
 			System.out.println(l);
@@ -131,11 +140,11 @@ public class Zadanie02 {
 	public static synchronized int decrementThreadCounter() {
 		return --threadCounter;
 	}
-	
+
 	public static synchronized void add(long l) {
 		raport.add(l);
 	}
-	
+
 	public static synchronized List<Long> getRaport() {
 		return raport;
 	}
