@@ -135,7 +135,7 @@ public class OptionalTest {
 		assertNotNull(ulica);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void test14() {
 		ArrayList<Optional<AdresOpt>> lista = new ArrayList<>(4);
 		lista.add(Optional.of(new AdresOpt()));
@@ -143,9 +143,10 @@ public class OptionalTest {
 		lista.add(Optional.of(new AdresOpt()));
 		lista.add(Optional.of(new AdresOpt()));
 		Optional<Optional<AdresOpt>> adresOpt = lista.stream().findAny();
-		UlicaOpt ulicaOpt = (UlicaOpt) adresOpt.flatMap(p -> p.map(s -> s.getUlicaOpt())).orElse(null);
-		String ulica = ulicaOpt.getNazwaOpt().orElse(null);
-		assertNotNull(ulica);
+		Optional<Optional<UlicaOpt>> ulicaOpt = adresOpt.flatMap(((Optional<AdresOpt> p) -> p.map((AdresOpt r) -> r.getUlicaOpt())));
+		Optional<Optional<String>> nazwaOpt = ulicaOpt.flatMap(((Optional<UlicaOpt> p) -> p.map((UlicaOpt r) -> r.getNazwaOpt())));
+		String ulica = nazwaOpt.flatMap((Optional<String> p) -> p.map((String r) -> r)).orElse(null);
+		assertNull(ulica);
 	}
 	
 }
