@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.junit.Test;
 
