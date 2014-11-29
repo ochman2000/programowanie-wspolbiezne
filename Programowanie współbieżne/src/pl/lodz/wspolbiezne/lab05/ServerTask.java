@@ -21,9 +21,11 @@ public class ServerTask implements Runnable {
 			boolean done = false;
 			while (!done) {
 				File file = queue.take();
+				System.out.println("Zleceono obs³ugê:\t"+file.getAbsoluteFile());
 				if (file==KlientTask.DUMMY) {
 					queue.put(file);
 					done = true;
+					System.out.println("Zakoñczono przetwarzanie.");
 				}
 				else {
 					search(file);

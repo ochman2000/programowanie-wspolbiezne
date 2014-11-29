@@ -17,21 +17,22 @@ public class KlientTask implements Runnable {
 	@Override
 	public void run() {
 		try {
-			enumerate(startingDirectory);
+			skanujFoldery(startingDirectory);
 			queue.put(DUMMY);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void enumerate(File directory) throws InterruptedException {
+	public void skanujFoldery(File directory) throws InterruptedException {
 		File[] files = directory.listFiles();
 		for (File file : files) {
 			if (!file.isDirectory()) {
 				queue.put(file);
+				System.out.println("Pzetwarzanie pliku:\t"+file.getAbsoluteFile());
 			}
 			else {
-				enumerate(file);
+				skanujFoldery(file);
 			}
 		}
 	}
