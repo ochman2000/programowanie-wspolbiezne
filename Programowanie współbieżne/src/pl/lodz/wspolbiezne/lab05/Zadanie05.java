@@ -1,19 +1,21 @@
 package pl.lodz.wspolbiezne.lab05;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class Zadanie05 {
+	
+	private static final String SCIEZKA_DO_PLIKU = "resources";
 
 	public static void main(String[] args) {
-		
-		Scanner in = new Scanner(System.in);
-		System.out.print("Podaj œcie¿kê, od ktorej chcesz rozpocz¹æ.");
-		String directory = in.nextLine();
-		System.out.print("Enter keyword (e.g. volatile): ");
-		String keyword = in.nextLine();
+		String directory = SCIEZKA_DO_PLIKU;
+		String keyword = "Marcel";
+		System.out.println("Trwa poszukiwanie s³owa: \"Marcel\"");
 		
 		final int FILE_QUEUE_SIZE = 10;
 		final int SEARCH_THREADS = 100;
