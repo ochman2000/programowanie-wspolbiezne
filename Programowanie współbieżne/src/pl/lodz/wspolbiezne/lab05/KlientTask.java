@@ -29,7 +29,7 @@ public class KlientTask implements Runnable {
 		for (File file : files) {
 			if (!file.isDirectory()) {
 				queue.put(file);
-				System.out.println("Pzetwarzanie pliku:\t"+file.getAbsoluteFile());
+				System.out.println("Zlecono obs³ugê:\t"+file.getAbsolutePath());
 			}
 			else {
 				skanujFoldery(file);
