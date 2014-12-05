@@ -9,6 +9,8 @@ public class KlientTask implements Runnable {
 	private File startingDirectory;
 	private BlockingQueue<File> queue;
 	
+	
+	
 	public KlientTask(BlockingQueue<File> queue, File startingDirectory) {
 		this.queue = queue;
 		this.startingDirectory = startingDirectory;

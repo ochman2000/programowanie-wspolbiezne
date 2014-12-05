@@ -24,7 +24,7 @@ public class Zadanie05 {
 		KlientTask klient = new KlientTask(queue, new File(directory));
 		new Thread(klient).start();
 		for (int i=0; i<=SEARCH_THREADS; i++) {
-			new Thread(new ServerTask(queue, keyword)).start();
+			new Thread(new Server(queue, keyword)).start();
 		}
 	}
 }

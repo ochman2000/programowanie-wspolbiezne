@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
-public class ServerTask implements Runnable {
+public class Server implements Runnable {
 	
 	private BlockingQueue<File> queue;
 	private String keyword;
 	private static int serverThreadCount;
 
-	public ServerTask(BlockingQueue<File> queue, String keyword) {
+	public Server(BlockingQueue<File> queue, String keyword) {
 		this.queue = queue;
 		this.keyword = keyword;
 	}
