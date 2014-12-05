@@ -1,7 +1,11 @@
 package pl.lodz.wspolbiezne.lab05;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class PC {
 	public static void main(String[] args) {
+		Logger.getGlobal().setLevel(Level.FINE);
 		Buffer b = new Buffer(4);
 		Producer p = new Producer(b);
 		Consumer c = new Consumer(b);
@@ -21,22 +25,31 @@ class Buffer {
 
 	public synchronized void put(char c) {
 		while (count == buffer.length) {
-			;
+			Logger.getGlobal().info("Metoda put release the monitor.");
+			try { wait(); }
+            catch (InterruptedException e) { } 
+            finally { }
 		}
 		System.out.println("Producing " + c + " ...");
 		buffer[in] = c;
 		in = (in + 1) % buffer.length;
 		count++;
+		notifyAll();
 	}
 
 	public synchronized char take() {
 		while (count == 0) {
-			;
+			Logger.getGlobal().fine("Metoda take release the monitor.");
+			try { wait(); }
+            catch (InterruptedException e) { } 
+            finally { }
+			
 		}
 		char c = buffer[out];
 		out = (out + 1) % buffer.length;
 		count--;
 		System.out.println("Consuming " + c + " ...");
+		notifyAll();
 		return c;
 	}
 }
