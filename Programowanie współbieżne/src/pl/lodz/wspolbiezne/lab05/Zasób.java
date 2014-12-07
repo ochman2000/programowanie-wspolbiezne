@@ -28,7 +28,7 @@ public class Zasób {
 
 	public synchronized char take() {
 		while (count == 0) {
-			Logger.getGlobal().fine("Zasób jest pusty, wiêc usypiam w¹tek.");
+			Logger.getGlobal().info("Zasób jest pusty, wiêc usypiam w¹tek.");
 			try {
 				wait();
 			} catch (InterruptedException e) {
