@@ -23,6 +23,8 @@ public class Zadanie05 {
 	    	  final Calendar cal = Calendar.getInstance();
 	    	  cal.setTimeInMillis(record.getMillis());
 	    	  sb.append(new SimpleDateFormat("HH:mm:ss:SSS").format(cal.getTime()));
+	    	  sb.append("\tthread: ");
+	    	  sb.append(record.getThreadID());
 	    	  sb.append("\tmethod: ");
 	    	  sb.append(record.getSourceMethodName());
 	    	  sb.append("()\t");
@@ -34,11 +36,26 @@ public class Zadanie05 {
 	    Logger.getGlobal().addHandler(conHdlr);
 		Logger.getGlobal().setLevel(Level.FINE);
 		
-		Zasób b = new Zasób(4);
-		Klient p = new Klient(b);
-		Serwer c = new Serwer(b);
+		Zasób z = new Zasób(80); //monitor zawieraj¹cy logikê
+		Thread[] w¹tki = new Thread[21];
+		
+		//PIERWSZA GRUPA W¥TKÓW (U¯YWA ZASOBÓW DZIESIÊCIOKROTNIE CZÊŒCIEJ I D£U¯EJ)
+		for (int i=0; i<10; i++) {
+			//duration = 100ms
+			//calls = 100;
+			w¹tki[i] = new Klient(z, 100, 100);
+		}
+		//DRUGA GRUPA W¥TKÓW (SZYBCIUTKO I MALUTKO)
+		for (int i=10; i<20; i++) {
+			//duration = 10ms
+			//calls = 10;
+			w¹tki[i] = new Klient(z, 10, 10);
+		}
+		//TRZECIA GRUPA W¥TKÓW (A W ZASADZIE W¥TEK)
+			//duration = 0ms;
+			//calls = 15;
+		w¹tki[20] = new Serwer(z);
 
-		p.start();
-		c.start();
+		for (Thread t : w¹tki) { t.start(); }
 	}
 }

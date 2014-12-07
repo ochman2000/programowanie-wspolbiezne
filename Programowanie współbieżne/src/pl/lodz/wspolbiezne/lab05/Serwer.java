@@ -1,5 +1,7 @@
 package pl.lodz.wspolbiezne.lab05;
 
+import java.util.logging.Logger;
+
 class Serwer extends Thread {
 	private Zasób zasób;
 
@@ -8,8 +10,9 @@ class Serwer extends Thread {
 	}
 
 	public void run() {
-		for (int i = 0; i < 10; i++) {
+		while (!zasób.tasksFinished()) {
 			zasób.take();
 		}
+		Logger.getGlobal().info("Zakoñczono procesowanie wszystkich zleconych zadañ.");
 	}
 }
