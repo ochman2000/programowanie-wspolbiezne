@@ -29,9 +29,9 @@ public class W¹tek implements Runnable {
 		}
 	}
 	
-	private void printSummary() {
-		System.out.print(getSummary());
-	}
+//	private void printSummary() {
+//		System.out.print(getSummary());
+//	}
 	
 	private StringBuilder getSummary() {
 		StringBuilder sb = new StringBuilder();

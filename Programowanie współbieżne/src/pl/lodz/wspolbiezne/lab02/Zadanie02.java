@@ -114,7 +114,7 @@ public class Zadanie02 {
 	}
 
 	public void startAll() {
-		int i = 0;
+//		int i = 0;
 		for (Thread t : threads) {
 			t.start();
 			// System.out.println("W¹tek " + ++i + " uruchomiony");

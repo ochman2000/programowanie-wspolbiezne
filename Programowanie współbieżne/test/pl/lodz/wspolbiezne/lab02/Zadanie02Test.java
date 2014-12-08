@@ -1,12 +1,8 @@
 package pl.lodz.wspolbiezne.lab02;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import pl.lodz.wspolbiezne.lab02.Zadanie02;
 
 public class Zadanie02Test {
 
