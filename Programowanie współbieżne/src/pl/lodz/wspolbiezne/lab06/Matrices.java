@@ -32,4 +32,5 @@ public class Matrices {
 	public int[][] getA() {
 		return A;
 	}
+	
 }
