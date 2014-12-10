@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Obliczenia {
 
 	private final int LICZBA_PROCESORÓW = 4;
-	private final static int N = 4;
+	private static int N;
 	int[][] A={ { 1, 2, 3, 4 },
 				{ 5, 6, 7, 8 },
 				{ 9,10,11,12 },
@@ -18,28 +18,35 @@ public class Obliczenia {
 				{13,14,15,16 } };
 
 	public Obliczenia() {
-		int[][] C = new int[N][N];
-		
-		dispatch(C);
+		if (!(A.length==A[0].length 
+				&& A[0].length==B.length
+				&& B.length==B[0].length)) {
+			throw new RuntimeException("Rozmiar macierzy ma byæ taki sam.");
+		}
+		N = A.length;
+		dispatch();
 	}
 
-	private void dispatch(int[][] C) {
-		for (int proces=0; proces<N; proces++) {
+	private void dispatch() {
+		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
 			int start;
 			int end;
 			start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
 			end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
-			getBlock(C, start, end);
+			int[][] C = getBlock(start, end);
 			System.out.println(toString(C)+"\n");
 		}
+		//merge results here
 	}
 
-	private void getBlock(int[][] C, int start, int end) {
+	private int[][] getBlock(int start, int end) {
+		int[][] C = new int[N][end-start];
 		for (int i = 0; i < N; i++) {
 			for (int j = start; j < end; j++) {
-				C[i][j] = get(i, j);
+				C[i][j-start] = get(i, j);
 			}
 		}
+		return C;
 	}
 
 	public int get(int row, int col) {
