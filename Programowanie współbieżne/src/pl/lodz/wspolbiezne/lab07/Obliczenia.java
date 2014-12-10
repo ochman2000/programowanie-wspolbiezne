@@ -20,17 +20,21 @@ public class Obliczenia {
 	public Obliczenia() {
 		int[][] C = new int[N][N];
 		
+		dispatch(C);
+	}
+
+	private void dispatch(int[][] C) {
 		for (int proces=0; proces<N; proces++) {
-			getBlock(C, proces);
+			int start;
+			int end;
+			start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+			end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			getBlock(C, start, end);
 			System.out.println(toString(C)+"\n");
 		}
 	}
 
-	private void getBlock(int[][] C, int proces) {
-		int start;
-		int end;
-		start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
-		end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+	private void getBlock(int[][] C, int start, int end) {
 		for (int i = 0; i < N; i++) {
 			for (int j = start; j < end; j++) {
 				C[i][j] = get(i, j);
