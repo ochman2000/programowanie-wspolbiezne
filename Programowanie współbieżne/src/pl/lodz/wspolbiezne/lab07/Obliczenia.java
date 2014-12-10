@@ -6,11 +6,15 @@ public class Obliczenia {
 
 	private final int LICZBA_PROCESORÓW = 4;
 	private final int N = 4;
-	int[][] A = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 },
-			{ 13, 14, 15, 16 } };
+	int[][] A={ { 1, 2, 3, 4 },
+				{ 5, 6, 7, 8 },
+				{ 9,10,11,12 },
+				{13,14,15,16 } };
 
-	int[][] B = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 },
-			{ 13, 14, 15, 16 } };
+	int[][] B={ { 1, 2, 3, 4 }, 
+				{ 5, 6, 7, 8 }, 
+				{ 9,10,11,12 },
+				{13,14,15,16 } };
 
 	public Obliczenia() {
 		int[][] C = new int[N][N];
@@ -51,17 +55,12 @@ public class Obliczenia {
 				C[i][j] = get(i, j);
 			}
 		}
-
-		System.out.println(Arrays.toString(C));
-
+		System.out.println(toString(C));
 	}
 
 	public int get(int row, int col) {
-		// row(0), col(1) = 2 = A[0][1]
 		int sum = 0;
 		for (int i = 0; i < N; i++) {
-			System.out.println("+");
-			System.out.println(A[row][i] * B[i][col]);
 			sum += A[row][i] * B[i][col];
 		}
 		return sum;
@@ -76,8 +75,25 @@ public class Obliczenia {
 	}
 
 	public static void main(String[] args) {
-//		System.out.println((new Obliczenia().get(0, 1)));
 		new Obliczenia();
 
 	}
+	
+	public static String toString(int[][] c) {
+        if (c == null)
+            return "null";
+
+        int iMax = c.length - 1;
+        if (iMax == -1)
+            return "[]";
+
+        StringBuilder b = new StringBuilder();
+        b.append('[');
+        for (int i = 0; ; i++) {
+        	b.append(Arrays.toString(c[i]));
+            if (i == iMax)
+                return b.append(']').toString();
+            b.append(",\n");
+        }
+    }
 }
