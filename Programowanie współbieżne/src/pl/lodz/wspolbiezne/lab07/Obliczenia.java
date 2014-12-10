@@ -2,10 +2,11 @@ package pl.lodz.wspolbiezne.lab07;
 
 import java.util.Arrays;
 
+
 public class Obliczenia {
 
 	private final int LICZBA_PROCESORÓW = 4;
-	private final int N = 4;
+	private final static int N = 4;
 	int[][] A={ { 1, 2, 3, 4 },
 				{ 5, 6, 7, 8 },
 				{ 9,10,11,12 },
@@ -18,44 +19,23 @@ public class Obliczenia {
 
 	public Obliczenia() {
 		int[][] C = new int[N][N];
+		
+		for (int proces=0; proces<N; proces++) {
+			getBlock(C, proces);
+			System.out.println(toString(C)+"\n");
+		}
+	}
+
+	private void getBlock(int[][] C, int proces) {
 		int start;
 		int end;
-		// proces 0
-		start = 0;
-		end = 1;
+		start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+		end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 		for (int i = 0; i < N; i++) {
 			for (int j = start; j < end; j++) {
 				C[i][j] = get(i, j);
 			}
 		}
-
-		// proces 1
-		start = 1;
-		end = 2;
-		for (int i = 0; i < N; i++) {
-			for (int j = start; j < end; j++) {
-				C[i][j] = get(i, j);
-			}
-		}
-
-		// proces 2
-		start = 2;
-		end = 3;
-		for (int i = 0; i < N; i++) {
-			for (int j = start; j < end; j++) {
-				C[i][j] = get(i, j);
-			}
-		}
-
-		// proces 3
-		start = 3;
-		end = 4;
-		for (int i = 0; i < N; i++) {
-			for (int j = start; j < end; j++) {
-				C[i][j] = get(i, j);
-			}
-		}
-		System.out.println(toString(C));
 	}
 
 	public int get(int row, int col) {
@@ -96,4 +76,26 @@ public class Obliczenia {
             b.append(",\n");
         }
     }
+	
+	public static int getBeginningOfInterval(int interval, int totalIntervals) {
+		if (totalIntervals <= interval) {
+			throw new IllegalArgumentException(
+					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
+							+ " a podano: " + interval);
+		}
+		double fraction = (double) interval / (double) totalIntervals;
+		return (int) (fraction * N);
+	}
+
+	public static int getEndOfInterval(int interval, int totalIntervals) {
+		if (totalIntervals <= interval) {
+			throw new IllegalArgumentException(
+					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
+							+ " a podano: " + interval);
+		}
+		double rozmiarPrzedzialu = (double) N
+				/ (double) totalIntervals;
+		double fraction = (double) interval / (double) totalIntervals;
+		return (int) ((fraction * N) + rozmiarPrzedzialu);
+	}
 }
