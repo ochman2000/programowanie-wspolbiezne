@@ -40,28 +40,28 @@ public class Obliczenia {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);;
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			int[][] C = getBlock(start, end);
-			Logger.getGlobal();System.out.println(toString(C)+"\n");
+			System.out.println(toString(C)+"\n");
 		}
 		//merge results here
 	}
 
 	private int[][] getBlock(int start, int end) {
 		int[][] C = new int[N][end-start];
-		for (int i = 0; i < N; i++) {
-			for (int j = start; j < end; j++) {
-				C[i][j-start] = get(i, j);
-			}
-		}
+//		for (int i = 0; i < N; i++) {
+//			for (int j = start; j < end; j++) {
+//				C[i][j-start] = multiply(i, j);
+//			}
+//		}
 		return C;
 	}
 
-	public int get(int row, int col) {
-		int sum = 0;
-		for (int i = 0; i < N; i++) {
-			sum += A[row][i] * B[i][col];
-		}
-		return sum;
-	}
+//	public int multiply(int row, int col) {
+//		int sum = 0;
+//		for (int i = 0; i < N; i++) {
+//			sum += A[row][i] * B[i][col];
+//		}
+//		return sum;
+//	}
 
 	public int multiply(int[] row, int[] col) {
 		int sum = 0;
@@ -69,6 +69,15 @@ public class Obliczenia {
 			sum += row[i] * col[i];
 		}
 		return sum;
+	}
+	
+	
+	public int[] multiply(int[] row, int[][] columns) {
+		int[] C = new int[row.length];
+		for (int i=0; i<row.length; i++) {
+			C[i] = multiply(row, columns[i]);
+		}
+		return C;
 	}
 
 	public static void main(String[] args) {
@@ -141,5 +150,15 @@ public class Obliczenia {
 	    Logger.getGlobal().addHandler(conHdlr);
 		Logger.getGlobal().setLevel(Level.FINE);
 		return Logger.getGlobal();
+	}
+
+	public int[][] processInput(int[][] rows, int[][] columns) {
+		int[][] C = new int[rows.length][columns.length];
+		for (int i=0; i<rows.length; i++) {
+			for (int j=0; j<columns.length; j++) {
+				C[i][j] = multiply(rows[i], columns[i]);
+			}
+		}
+		return C;
 	}
 }
