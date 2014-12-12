@@ -12,12 +12,11 @@ public class Obliczenia {
 	double[][] c = new double[SIZE][SIZE];
 	
 	public Obliczenia() {
-//		for (int i=0; i<SIZE; i++) {
-//			a[i] = new Random().doubles(SIZE).toArray();
-//			b[i] = new Random().doubles(SIZE).toArray();
-//			c[i] = new Random().doubles(SIZE).toArray();
-//		}
-		
+		for (int i=0; i<SIZE; i++) {
+			a[i] = new Random().doubles(SIZE).toArray();
+			b[i] = new Random().doubles(SIZE).toArray();
+			c[i] = new Random().doubles(SIZE).toArray();
+		}
 	}
 	
 	public static void main(String[] args) {

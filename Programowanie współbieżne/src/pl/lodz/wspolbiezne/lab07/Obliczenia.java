@@ -1,12 +1,20 @@
 package pl.lodz.wspolbiezne.lab07;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 
 public class Obliczenia {
 
 	private final int LICZBA_PROCESORÓW = 4;
-	private static int N;
+	private final int N;
 	int[][] A={ { 1, 2, 3, 4 },
 				{ 5, 6, 7, 8 },
 				{ 9,10,11,12 },
@@ -29,12 +37,10 @@ public class Obliczenia {
 
 	private void dispatch() {
 		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
-			int start;
-			int end;
-			start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
-			end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);;
+			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			int[][] C = getBlock(start, end);
-			System.out.println(toString(C)+"\n");
+			Logger.getGlobal();System.out.println(toString(C)+"\n");
 		}
 		//merge results here
 	}
@@ -88,7 +94,7 @@ public class Obliczenia {
         }
     }
 	
-	public static int getBeginningOfInterval(int interval, int totalIntervals) {
+	public int getBeginningOfInterval(int interval, int totalIntervals) {
 		if (totalIntervals <= interval) {
 			throw new IllegalArgumentException(
 					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
@@ -98,7 +104,7 @@ public class Obliczenia {
 		return (int) (fraction * N);
 	}
 
-	public static int getEndOfInterval(int interval, int totalIntervals) {
+	public int getEndOfInterval(int interval, int totalIntervals) {
 		if (totalIntervals <= interval) {
 			throw new IllegalArgumentException(
 					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
@@ -108,5 +114,32 @@ public class Obliczenia {
 				/ (double) totalIntervals;
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) ((fraction * N) + rozmiarPrzedzialu);
+	}
+	
+	public Logger getCustomLogger() {
+		Logger.getGlobal().setUseParentHandlers(false);
+	    Handler conHdlr = new ConsoleHandler();
+	    conHdlr.setFormatter(new Formatter() {
+	      public String format(LogRecord record) {
+	    	  StringBuilder sb = new StringBuilder();
+	    	  sb.append("[");
+	    	  sb.append(record.getLevel());
+	    	  sb.append("] ");
+	    	  final Calendar cal = Calendar.getInstance();
+	    	  cal.setTimeInMillis(record.getMillis());
+	    	  sb.append(new SimpleDateFormat("HH:mm:ss:SSS").format(cal.getTime()));
+	    	  sb.append("\tthread: ");
+	    	  sb.append(record.getThreadID());
+	    	  sb.append("\tmethod: ");
+	    	  sb.append(record.getSourceMethodName());
+	    	  sb.append("()\t");
+	    	  sb.append(record.getMessage());
+	    	  sb.append("\n");
+	    	  return sb.toString();
+	      }
+	    });
+	    Logger.getGlobal().addHandler(conHdlr);
+		Logger.getGlobal().setLevel(Level.FINE);
+		return Logger.getGlobal();
 	}
 }
