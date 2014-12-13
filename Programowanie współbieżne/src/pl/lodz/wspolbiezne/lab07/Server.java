@@ -24,13 +24,12 @@ public class Server {
 
 			// Initiate conversation with client
 			Obliczenia obliczenia = new Obliczenia();
-			outputLine = obliczenia.processInput(null, null);
-			out.println(outputLine);
+//			outputLine = obliczenia.processInput(null, null);
+//			out.println(outputLine);
 
 			while ((inputLine = in.readLine()) != null) {
-				
 //				outputLine = obliczenia.processInput(inputLine);
-				out.println(outputLine);
+//				out.println(obliczenia.tooutputLine);
 
 			}
 		} catch (IOException e) {
