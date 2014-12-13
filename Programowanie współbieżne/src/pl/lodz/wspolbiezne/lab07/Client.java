@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class Client {
 	
@@ -52,6 +53,7 @@ public class Client {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto C = obliczenia.getBlock(start, end);
+			Logger.getGlobal().info("Wysy³ka bloku nr: "+proces);
 			oos.writeObject(C);		
 		}
 		
@@ -88,5 +90,9 @@ public class Client {
 		double rozmiarPrzedzialu = (double) N / (double) totalIntervals;
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) ((fraction * N) + rozmiarPrzedzialu);
+	}
+	
+	public static void main(String[] args) {
+		new Client("localhost", 4444);
 	}
 }

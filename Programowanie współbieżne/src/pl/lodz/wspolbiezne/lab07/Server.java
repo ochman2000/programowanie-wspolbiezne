@@ -62,4 +62,7 @@ public class Server {
 			oos.writeObject("bye"); // daj znak koñca
 		}
 	}
+	public static void main(String[] args) {
+		new Server(4444);
+	}
 }
