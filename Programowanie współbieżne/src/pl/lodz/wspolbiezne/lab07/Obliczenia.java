@@ -12,55 +12,64 @@ import java.util.logging.Logger;
 
 public class Obliczenia {
 
-	private final int LICZBA_PROCESORÓW = 1;
-	private final int N;
-	int[][] A={ { 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 9, 10, 11, 12 },
-				{ 13, 14, 15, 16 } };
+	private int N;
+	private int[][] A,B;
 
-	int[][] B={ { 1, 2, 3, 4 }, 
-				{ 5, 6, 7, 8 }, 
-				{ 9, 10, 11, 12 },
-				{ 13, 14, 15, 16 } };
-
-	public Obliczenia() {
+	public Obliczenia(int[][] A, int[][] B) {
 		if (!(A.length == A[0].length 
 				&& A[0].length == B.length 
 				&& B.length == B[0].length)) {
 			throw new RuntimeException("Rozmiar macierzy ma byæ taki sam.");
 		}
 		N = A.length;
-		dispatch();
+		this.A = A;
+		this.B = B;
+//		dispatch();
 	}
 
-	private void dispatch() {
-		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
-			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
-			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
-			int[][][] C = getBlock(start, end);
-			System.out.println(toString(C[0]) + "\n");
-			System.out.println(toString(C[1]) + "\n");
-		}
-		// merge results here
-	}
 
-	private int[][][] getBlock(int start, int end) {
-		// int[][] C = new int[N][end-start];
-		// for (int i = 0; i < N; i++) {
-		// for (int j = start; j < end; j++) {
-		// C[i][j-start] = multiply(i, j);
-		// }
-		// }
+
+//	public int[][][] getBlock(int start, int end) {
+//		int l = end - start;
+//		int[][][] C = new int[2][l][N];
+//		for (int j=0; j<l; j++) {
+//			for (int i=0; i<N; i++) {
+//				C[0][j][i] = B[start+j][i];
+//				C[1][j][i] = A[i][start+j];
+//			}
+//		}
+//		return C;
+//	}
+	
+	public MacierzeDto getBlock(int start, int end) {
+		MacierzeDto D = new MacierzeDto();
+		Macierz columns = new Macierz();
+		Macierz rows = new Macierz();
+
 		int l = end - start;
 		int[][][] C = new int[2][l][N];
+		Matrix[] kolumny = new Matrix[l];
+		Matrix[] wiersze = new Matrix[l];
 		for (int j=0; j<l; j++) {
 			for (int i=0; i<N; i++) {
 				C[0][j][i] = B[start+j][i];
 				C[1][j][i] = A[i][start+j];
 			}
+			Matrix kol = new Matrix();
+			Matrix wrs = new Matrix();
+			kol.setIndex(j);
+			kol.setWartosc(C[0][j]);
+			wrs.setIndex(j);
+			wrs.setWartosc(C[1][j]);
+			kolumny[j] = kol;
+			wiersze[j] = wrs;
 		}
-		return C;
+		
+		columns.setValues(kolumny);
+		rows.setValues(wiersze);
+		D.setColumns(columns);
+		D.setRows(rows);
+		return D;
 	}
 
 	public int multiply(int[] row, int[] col) {
@@ -69,11 +78,6 @@ public class Obliczenia {
 			sum += row[i] * col[i];
 		}
 		return sum;
-	}
-
-	public static void main(String[] args) {
-		new Obliczenia();
-
 	}
 
 	public static String toString(int[][] c) {
@@ -92,27 +96,6 @@ public class Obliczenia {
 				return b.append(']').toString();
 			b.append(",\n");
 		}
-	}
-
-	public int getBeginningOfInterval(int interval, int totalIntervals) {
-		if (totalIntervals <= interval) {
-			throw new IllegalArgumentException(
-					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
-							+ " a podano: " + interval);
-		}
-		double fraction = (double) interval / (double) totalIntervals;
-		return (int) (fraction * N);
-	}
-
-	public int getEndOfInterval(int interval, int totalIntervals) {
-		if (totalIntervals <= interval) {
-			throw new IllegalArgumentException(
-					"Przedzia³ nie mo¿e byæ wiêkszy ni¿: " + totalIntervals
-							+ " a podano: " + interval);
-		}
-		double rozmiarPrzedzialu = (double) N / (double) totalIntervals;
-		double fraction = (double) interval / (double) totalIntervals;
-		return (int) ((fraction * N) + rozmiarPrzedzialu);
 	}
 
 	public Logger getCustomLogger() {
