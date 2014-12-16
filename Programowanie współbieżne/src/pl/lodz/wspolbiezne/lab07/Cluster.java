@@ -9,10 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-public class Server {
+public class Cluster {
 	Logger logger;
 
-	public Server(int portNumber) {
+	public Cluster(int portNumber) {
 		logger = Obliczenia.getCustomLogger();
 		logger.info("Starting server at port: "+portNumber+" ...");
 		try {
@@ -39,16 +39,19 @@ public class Server {
 			ClassNotFoundException {
 		InputStream inputStream = kkSocket.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
+		OutputStream outputStream = kkSocket.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 
 		MacierzeDto macierze;
 		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
-			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
+			logger.info("Przyjêto macierz do obliczenia");
+//			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
 										// wype³niona
-				ois.close();
+//				ois.close();
 //				oos.close();
-				kkSocket.close();
-				break;
-			}
+//				kkSocket.close();
+//				break;
+//			}
 			// Initiate conversation with client
 			// Obliczenia obliczenia = new Obliczenia();
 			// outputLine = obliczenia.processInput(null, null);
@@ -59,14 +62,13 @@ public class Server {
 			// out.println(obliczenia.tooutputLine);
 			// }
 
-			OutputStream outputStream = kkSocket.getOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 			System.out.println(macierze.getColumns());
 			System.out.println(macierze.getRows());
-			oos.writeObject("bye"); // daj znak koñca
+//			oos.writeObject("bye"); // daj znak koñca
+			oos.writeObject(macierze);
 		}
 	}
 	public static void main(String[] args) {
-		new Server(4444);
+		new Cluster(4444);
 	}
 }

@@ -1,9 +1,11 @@
 package pl.lodz.wspolbiezne.lab07;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class MacierzeDto {
+public class MacierzeDto implements Serializable {
 	
+	private static final long serialVersionUID = 1363948434542689151L;
 	private Macierz rows;
 	private Macierz columns;
 	
@@ -21,7 +23,8 @@ public class MacierzeDto {
 	}
 }
 
-class Matrix {
+class Matrix implements Serializable {
+	private static final long serialVersionUID = 1363948434542689151L;
 	private int[] wartosc;
 	private int index;
 	
@@ -46,7 +49,8 @@ class Matrix {
 	}
 }
 
-class Macierz {
+class Macierz implements Serializable {
+	private static final long serialVersionUID = 1363948434542689151L;
 	private Matrix[] values;
 	
 	public Matrix[] getValues() {
