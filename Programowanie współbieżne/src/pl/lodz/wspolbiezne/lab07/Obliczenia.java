@@ -98,7 +98,7 @@ public class Obliczenia {
 		}
 	}
 
-	public Logger getCustomLogger() {
+	public static Logger getCustomLogger() {
 		Logger.getGlobal().setUseParentHandlers(false);
 		Handler conHdlr = new ConsoleHandler();
 		conHdlr.setFormatter(new Formatter() {
@@ -111,8 +111,6 @@ public class Obliczenia {
 				cal.setTimeInMillis(record.getMillis());
 				sb.append(new SimpleDateFormat("HH:mm:ss:SSS").format(cal
 						.getTime()));
-				sb.append("\tthread: ");
-				sb.append(record.getThreadID());
 				sb.append("\tmethod: ");
 				sb.append(record.getSourceMethodName());
 				sb.append("()\t");

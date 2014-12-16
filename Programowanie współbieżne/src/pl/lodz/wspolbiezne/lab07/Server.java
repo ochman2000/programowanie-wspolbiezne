@@ -7,11 +7,14 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class Server {
+	Logger logger;
 
 	public Server(int portNumber) {
-
+		logger = Obliczenia.getCustomLogger();
+		logger.info("Starting server at port: "+portNumber+" ...");
 		try {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 			Socket clientSocket = serverSocket.accept();
@@ -29,21 +32,20 @@ public class Server {
 			System.exit(1);
 
 		}
+		logger.info("Server started at 127.0.0.1 port "+portNumber);
 	}
 
 	private void processInput(Socket kkSocket) throws IOException,
 			ClassNotFoundException {
 		InputStream inputStream = kkSocket.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
-		OutputStream outputStream = kkSocket.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 
 		MacierzeDto macierze;
 		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
 			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
 										// wype³niona
 				ois.close();
-				oos.close();
+//				oos.close();
 				kkSocket.close();
 				break;
 			}
@@ -57,6 +59,8 @@ public class Server {
 			// out.println(obliczenia.tooutputLine);
 			// }
 
+			OutputStream outputStream = kkSocket.getOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 			System.out.println(macierze.getColumns());
 			System.out.println(macierze.getRows());
 			oos.writeObject("bye"); // daj znak koñca

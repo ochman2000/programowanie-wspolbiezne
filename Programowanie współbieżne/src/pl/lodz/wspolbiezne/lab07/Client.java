@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 public class Client {
 	
+	private Logger logger;
 	private final int LICZBA_PROCESORÓW = 4;
 	private int N;
 	int[][] A={ { 1, 2, 3, 4 },
@@ -24,6 +25,8 @@ public class Client {
 				{ 13, 14, 15, 16 } };
 
 	public Client(String hostName, int portNumber) {
+		logger = Obliczenia.getCustomLogger();
+		logger.info("Connecting to server at port: "+portNumber+" ...");
 		N = A.length;
 		try {
 			Socket kkSocket = new Socket(hostName, portNumber);
@@ -43,8 +46,6 @@ public class Client {
 	}
 	
 	private void dispatch(Socket kkSocket) throws IOException, ClassNotFoundException {
-		InputStream inputStream = kkSocket.getInputStream();
-		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		OutputStream outputStream = kkSocket.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
 		Obliczenia obliczenia = new Obliczenia(A, B);
@@ -54,11 +55,14 @@ public class Client {
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto C = obliczenia.getBlock(start, end);
 			Logger.getGlobal().info("Wysy³ka bloku nr: "+proces);
-			oos.writeObject(C);		
+			oos.writeObject(C);
+			logger.info("Dispatched process no. "+proces);
 		}
 		
 		//tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
 		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
+		InputStream inputStream = kkSocket.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		MacierzeDto macierze;
 		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
 			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
