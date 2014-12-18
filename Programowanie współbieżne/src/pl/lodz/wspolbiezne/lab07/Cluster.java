@@ -53,8 +53,8 @@ public class Cluster {
 //				break;
 //			}
 			// Initiate conversation with client
-			// Obliczenia obliczenia = new Obliczenia();
-			// outputLine = obliczenia.processInput(null, null);
+			 Obliczenia obliczenia = new Obliczenia();
+			 ResultDto result = obliczenia.processInput(macierze);
 			// out.println(outputLine);
 
 			// while ((inputLine = in.readLine()) != null) {
@@ -62,10 +62,8 @@ public class Cluster {
 			// out.println(obliczenia.tooutputLine);
 			// }
 
-			System.out.println(macierze.getColumns());
-			System.out.println(macierze.getRows());
 //			oos.writeObject("bye"); // daj znak koñca
-			oos.writeObject(macierze);
+			oos.writeObject(result);
 		}
 	}
 	public static void main(String[] args) {

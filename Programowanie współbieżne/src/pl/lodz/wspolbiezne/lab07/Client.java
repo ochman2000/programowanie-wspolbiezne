@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Client {
@@ -63,16 +64,12 @@ public class Client {
 		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
 		InputStream inputStream = kkSocket.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
-		MacierzeDto macierze;
-		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
-			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
-										// wype³niona
-				ois.close();
-				oos.close();
-				kkSocket.close();
-				break;
-			}
+		ResultDto macierze;
+		int[][] AB = new int[N][N];
+		while ((macierze = (ResultDto) ois.readObject()) != null) {
+			obliczenia.merge(macierze, AB);
 		}
+		System.out.println(Obliczenia.toString(AB));
 	}
 
 	public int getBeginningOfInterval(int interval, int totalIntervals) {

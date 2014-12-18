@@ -1,8 +1,10 @@
 package pl.lodz.wspolbiezne.lab07;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -14,6 +16,7 @@ public class Obliczenia {
 
 	private int N;
 	private int[][] A,B;
+	private MacierzeDto macierzeDto;
 
 	public Obliczenia(int[][] A, int[][] B) {
 		if (!(A.length == A[0].length 
@@ -24,7 +27,10 @@ public class Obliczenia {
 		N = A.length;
 		this.A = A;
 		this.B = B;
-//		dispatch();
+	}
+	
+	public Obliczenia() {
+		
 	}
 
 
@@ -43,30 +49,30 @@ public class Obliczenia {
 	
 	public MacierzeDto getBlock(int start, int end) {
 		MacierzeDto D = new MacierzeDto();
-		Macierz columns = new Macierz();
-		Macierz rows = new Macierz();
-
+		
 		int l = end - start;
 		int[][][] C = new int[2][l][N];
-		Matrix[] kolumny = new Matrix[l];
-		Matrix[] wiersze = new Matrix[l];
+		List<Zbiór> rows = new ArrayList<Zbiór>(l);
+		List<Zbiór> columns = new ArrayList<Zbiór>(l);
+		
 		for (int j=0; j<l; j++) {
+			Zbiór z1 = new Zbiór();
+			Zbiór z2 = new Zbiór();
+			z1.setIndex(j);
+			z2.setIndex(j);
+			List<Element> values1 = new ArrayList<>(N);
+			List<Element> values2 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
 				C[0][j][i] = B[start+j][i];
+				values1.add(new Element(j, i, B[start+j][i]));
 				C[1][j][i] = A[i][start+j];
+				values2.add(new Element(j, i, A[i][start+j]));
 			}
-			Matrix kol = new Matrix();
-			Matrix wrs = new Matrix();
-			kol.setIndex(j);
-			kol.setWartosc(C[0][j]);
-			wrs.setIndex(j);
-			wrs.setWartosc(C[1][j]);
-			kolumny[j] = kol;
-			wiersze[j] = wrs;
+			z1.setValues(values1);
+			rows.add(z1);
+			z2.setValues(values2);
+			columns.add(z2);
 		}
-		
-		columns.setValues(kolumny);
-		rows.setValues(wiersze);
 		D.setColumns(columns);
 		D.setRows(rows);
 		return D;
@@ -111,6 +117,8 @@ public class Obliczenia {
 				cal.setTimeInMillis(record.getMillis());
 				sb.append(new SimpleDateFormat("HH:mm:ss:SSS").format(cal
 						.getTime()));
+				sb.append("\t");
+				sb.append(record.getClass());
 				sb.append("\tmethod: ");
 				sb.append(record.getSourceMethodName());
 				sb.append("()\t");
@@ -132,5 +140,38 @@ public class Obliczenia {
 			}
 		}
 		return C;
+	}
+	
+	public ResultDto processInput(MacierzeDto macierze) {
+		ResultDto result = new ResultDto();
+		int liczbaPaskow = macierze.getColumns().size();
+		List<Element> elements = new ArrayList<Element>();
+		for (int i=0; i<liczbaPaskow; i++) {
+			for (int j=0; j<liczbaPaskow; j++) {
+				Element e = new Element();
+				e.setKolumna(macierze.getColumns().get(i).getIndex());
+				e.setWiersz(macierze.getRows().get(j).getIndex());
+				int v = 0;
+				int size = macierze.getColumns().get(i).getValues().size();
+				for (int m=0; m<size; m++) {
+					for (int k=0; k<size; k++) {
+						v += macierze.getColumns().get(i).getValues().get(m).getWartosc()
+							*macierze.getRows().get(j).getValues().get(k).getWartosc();
+					}
+				}
+			e.setWartosc(v);
+			elements.add(e);
+			}
+		}
+		result.setElements(elements);
+		return result;
+	}
+
+
+
+	public void merge(ResultDto result, int[][] ab) {
+		for (Element e : result.getElements()) {
+			ab[e.getKolumna()][e.getWiersz()] = e.getWartosc();
+		}
 	}
 }
