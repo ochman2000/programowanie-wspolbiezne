@@ -8,35 +8,7 @@ public class MacierzeDto implements Serializable {
 	private static final long serialVersionUID = 1363948434542689151L;
 	private List<Zbiór> rows;
 	private List<Zbiór> columns;
-	
-//	public String toString() {
-//		if (rows == null)
-//			return "null";
-//
-//		int iMax = rows.size() - 1;
-//		if (iMax == -1)
-//			return "[]";
-//
-//		StringBuilder b = new StringBuilder();
-//		b.append('[');
-//		for (int i = 0;; i++) {
-//			b.append(rows.get(i).getWartosc());
-//			if (i == iMax) {
-//				b.append("]\t");
-//				break;
-//			}
-//			b.append(",");
-//		}
-//		b.append('[');
-//		for (int i = 0;; i++) {
-//			b.append(columns.get(i).getWartosc());
-//			if (i == iMax) {
-//				return b.append(']').toString();
-//			}
-//			b.append(",");
-//		}
-//	}
-	
+
 	public List<Zbiór> getRows() {
 		return rows;
 	}
@@ -45,8 +17,16 @@ public class MacierzeDto implements Serializable {
 		this.rows = values;
 	}
 	
+	public Zbiór getRow(int index) {
+		return getRows().get(index);
+	}
+	
 	public List<Zbiór> getColumns() {
 		return columns;
+	}
+	
+	public Zbiór getColumn(int index) {
+		return getColumns().get(index);
 	}
 
 	public void setColumns(List<Zbiór> columns) {
@@ -54,60 +34,19 @@ public class MacierzeDto implements Serializable {
 	}
 }
 
-
-class Element implements Serializable {
-	private static final long serialVersionUID = 1363948434542689151L;
-	private int wartosc;
-	private int wiersz;
-	private int kolumna;
-
-	public Element() {
-		
-	}
-	
-	public Element(int wiersz, int kolumna, int wartosc) {
-		this.wiersz = wiersz;
-		this.kolumna = kolumna;
-		this.wartosc = wartosc;
-	}
-	
-	public String toString() {
-		return "["+getKolumna()+"]"+"["+getWiersz()+"]="+getWartosc();
-	}
-	
-	public int getWiersz() {
-		return wiersz;
-	}
-
-	public int getKolumna() {
-		return kolumna;
-	}
-
-	public int getWartosc() {
-		return wartosc;
-	}
-
-	public void setWartosc(int wartosc) {
-		this.wartosc = wartosc;
-	}
-
-	public void setWiersz(int wiersz) {
-		this.wiersz = wiersz;
-	}
-
-	public void setKolumna(int kolumna) {
-		this.kolumna = kolumna;
-	}
-}
-
 class Zbiór implements Serializable {
 	private static final long serialVersionUID = 1363948434542689151L;
-	private List<Element> values;
+	private List<Integer> values;
 	private int index;
-	public List<Element> getValues() {
+	public List<Integer> getValues() {
 		return values;
 	}
-	public void setValues(List<Element> values) {
+	
+	public Integer getValue(int index) {
+		return getValues().get(index);
+	}
+	
+	public void setValues(List<Integer> values) {
 		this.values = values;
 	}
 	public int getIndex() {

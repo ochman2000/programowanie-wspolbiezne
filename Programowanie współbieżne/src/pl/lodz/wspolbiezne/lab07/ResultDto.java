@@ -25,3 +25,38 @@ public class ResultDto implements Serializable {
 		return sb.toString();
 	}
 }
+
+class Element implements Serializable {
+	private static final long serialVersionUID = 1363948434542689151L;
+	private int wiersz;
+	public Element(int j, int i, int k) {
+		this.kolumna = j;
+		this.wiersz = i;
+		this.wartoœæ = k;
+	}
+	
+	public Element() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getWiersz() {
+		return wiersz;
+	}
+	public void setWiersz(int wiersz) {
+		this.wiersz = wiersz;
+	}
+	public int getKolumna() {
+		return kolumna;
+	}
+	public void setKolumna(int kolumna) {
+		this.kolumna = kolumna;
+	}
+	public int getWartoœæ() {
+		return wartoœæ;
+	}
+	public void setWartoœæ(int wartoœæ) {
+		this.wartoœæ = wartoœæ;
+	}
+	private int kolumna;
+	private int wartoœæ;
+}

@@ -51,21 +51,21 @@ public class Obliczenia {
 		
 		int l = end - start;
 		int[][][] C = new int[2][l][N];
-		List<Zbiór> rows = new ArrayList<Zbiór>(l);
-		List<Zbiór> columns = new ArrayList<Zbiór>(l);
+		List<Zbiór> rows = new ArrayList<>(l);
+		List<Zbiór> columns = new ArrayList<>(l);
 		
 		for (int j=0; j<l; j++) {
 			Zbiór z1 = new Zbiór();
 			Zbiór z2 = new Zbiór();
 			z1.setIndex(j);
 			z2.setIndex(j);
-			List<Element> values1 = new ArrayList<>(N);
-			List<Element> values2 = new ArrayList<>(N);
+			List<Integer> values1 = new ArrayList<>(N);
+			List<Integer> values2 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
 				C[0][j][i] = B[start+j][i];
-				values1.add(new Element(j, i, B[start+j][i]));
+				values1.add(B[start+j][i]);
 				C[1][j][i] = A[i][start+j];
-				values2.add(new Element(j, i, A[i][start+j]));
+				values2.add(A[i][start+j]);
 			}
 			z1.setValues(values1);
 			rows.add(z1);
@@ -144,21 +144,21 @@ public class Obliczenia {
 	public ResultDto processInput(MacierzeDto macierze) {
 		ResultDto result = new ResultDto();
 		int liczbaPaskow = macierze.getColumns().size();
-		List<Element> elements = new ArrayList<Element>();
+		List<Element> elements = new ArrayList<>(liczbaPaskow*liczbaPaskow);
 		for (int i=0; i<liczbaPaskow; i++) {
 			for (int j=0; j<liczbaPaskow; j++) {
 				Element e = new Element();
-				e.setKolumna(macierze.getColumns().get(i).getIndex());
-				e.setWiersz(macierze.getRows().get(j).getIndex());
+				e.setKolumna(macierze.getColumn(i).getIndex());
+				e.setWiersz(macierze.getRow(j).getIndex());
 				int v = 0;
-				int size = macierze.getColumns().get(i).getValues().size();
+				int size = macierze.getColumn(i).getValues().size();
 				for (int m=0; m<size; m++) {
 					for (int k=0; k<size; k++) {
-						v += macierze.getColumns().get(i).getValues().get(m).getWartosc()
-							*macierze.getRows().get(j).getValues().get(k).getWartosc();
+						v += macierze.getColumn(i).getValue(m)
+							*macierze.getRow(j).getValue(k);
 					}
 				}
-			e.setWartosc(v);
+			e.setWartoœæ(v);
 			elements.add(e);
 			}
 		}
@@ -170,7 +170,7 @@ public class Obliczenia {
 
 	public void merge(ResultDto result, int[][] ab) {
 		for (Element e : result.getElements()) {
-			ab[e.getKolumna()][e.getWiersz()] = e.getWartosc();
+			ab[e.getKolumna()][e.getWiersz()] = e.getWartoœæ();
 		}
 	}
 }
