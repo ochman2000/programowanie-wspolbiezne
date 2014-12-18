@@ -101,6 +101,7 @@ class Element implements Serializable {
 }
 
 class Zbiór implements Serializable {
+	private static final long serialVersionUID = 1363948434542689151L;
 	private List<Element> values;
 	private int index;
 	public List<Element> getValues() {

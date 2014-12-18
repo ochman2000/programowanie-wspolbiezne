@@ -16,7 +16,6 @@ public class Obliczenia {
 
 	private int N;
 	private int[][] A,B;
-	private MacierzeDto macierzeDto;
 
 	public Obliczenia(int[][] A, int[][] B) {
 		if (!(A.length == A[0].length 
