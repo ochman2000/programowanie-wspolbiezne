@@ -124,10 +124,41 @@ public class ObliczeniaTest {
 		assertEquals(3, index);
 	}
 	
+	@Test
+	public void test04() {
+		int[][] A={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+
+		int[][] B={ { 17, 18, 19, 20 }, 
+					{ 21, 22, 23, 24 }, 
+					{ 25, 26, 27, 28 },
+					{ 29, 30, 31, 32 } };
+		
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		
+		MacierzeDto block24 = obliczenia.getBlock(2, 4);
+		int index;
+		
+		index = block24.getColumn(0).getIndex();
+		assertEquals(2, index);
+		
+		index = block24.getColumn(1).getIndex();
+		assertEquals(3, index);
+		
+		index = block24.getRow(0).getIndex();
+		assertEquals(2, index);
+		
+		index = block24.getRow(1).getIndex();
+		assertEquals(3, index);
+		
+	}
+	
 	private static final int N = 4;
 	
 	@Test
-	public void test04() {
+	public void test06() {
 		int LICZBA_PROCESORÓW=2;
 		int[][] A={ { 1, 2, 3, 4 },
 					{ 5, 6, 7, 8 },
@@ -150,7 +181,7 @@ public class ObliczeniaTest {
 	}
 	
 	@Test
-	public void test05() {
+	public void test07() {
 		int LICZBA_PROCESORÓW=2;
 		int[][] A={ { 1, 2, 3, 4 },
 					{ 5, 6, 7, 8 },

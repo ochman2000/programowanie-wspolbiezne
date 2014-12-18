@@ -57,8 +57,8 @@ public class Obliczenia {
 		for (int j=0; j<l; j++) {
 			Zbiór z1 = new Zbiór();
 			Zbiór z2 = new Zbiór();
-			z1.setIndex(j);
-			z2.setIndex(j);
+			z1.setIndex(start+j);
+			z2.setIndex(start+j);
 			List<Integer> values1 = new ArrayList<>(N);
 			List<Integer> values2 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
