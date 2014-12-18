@@ -24,6 +24,10 @@ public class ResultDto implements Serializable {
 		}
 		return sb.toString();
 	}
+	
+	public Element getElement(int i) {
+		return getElements().get(i);
+	}
 }
 
 class Element implements Serializable {
@@ -37,6 +41,10 @@ class Element implements Serializable {
 	
 	public Element() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public String toString() {
+		return "["+getKolumna()+"]["+getWiersz()+"]="+getWartoœæ();
 	}
 
 	public int getWiersz() {

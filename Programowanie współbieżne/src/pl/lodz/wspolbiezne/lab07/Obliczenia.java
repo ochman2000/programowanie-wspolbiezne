@@ -143,26 +143,28 @@ public class Obliczenia {
 	
 	public ResultDto processInput(MacierzeDto macierze) {
 		ResultDto result = new ResultDto();
-		int liczbaPaskow = macierze.getColumns().size();
-		List<Element> elements = new ArrayList<>(liczbaPaskow*liczbaPaskow);
-		for (int i=0; i<liczbaPaskow; i++) {
-			for (int j=0; j<liczbaPaskow; j++) {
+		int liczbaKolumn = macierze.getColumns().size();
+		int liczbaWierszy = macierze.getRows().size();
+		List<Element> elements = new ArrayList<>(liczbaKolumn*liczbaWierszy);
+		for (int i=0; i<liczbaKolumn; i++) {
+			for (int j=0; j<liczbaWierszy; j++) {
 				Element e = new Element();
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());
 				int v = 0;
 				int size = macierze.getColumn(i).getValues().size();
 				for (int m=0; m<size; m++) {
-					for (int k=0; k<size; k++) {
+//					for (int k=0; k<size; k++) {
 						v += macierze.getColumn(i).getValue(m)
-							*macierze.getRow(j).getValue(k);
-					}
+							*macierze.getRow(j).getValue(m);
+//					}
 				}
-			e.setWartoœæ(v);
-			elements.add(e);
+				e.setWartoœæ(v);
+				elements.add(e);
 			}
 		}
 		result.setElements(elements);
+//		System.out.println(result);
 		return result;
 	}
 
