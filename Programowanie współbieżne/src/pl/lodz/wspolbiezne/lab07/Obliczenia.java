@@ -160,7 +160,7 @@ public class Obliczenia {
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());
 				double v = 0;
-				int size = macierze.getColumn(i).getValues().size();
+				int size = macierze.getColumn(i).getValues().length;
 				for (int m=0; m<size; m++) {
 					v += macierze.getColumn(i).getValue(m)
 						*macierze.getRow(j).getValue(m);

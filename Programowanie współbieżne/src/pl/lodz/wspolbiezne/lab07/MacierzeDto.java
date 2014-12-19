@@ -36,19 +36,24 @@ public class MacierzeDto implements Serializable {
 
 class Zbiór implements Serializable {
 	private static final long serialVersionUID = 1363948434542689151L;
-	private List<Double> values;
+	private double[] values;
 	private int index;
-	public List<Double> getValues() {
+	public double[] getValues() {
 		return values;
 	}
 	
 	public Double getValue(int index) {
-		return getValues().get(index);
+		return values[index];
 	}
 	
 	public void setValues(List<Double> values) {
+		this.values = values.stream().mapToDouble(Double::doubleValue).toArray();
+	}
+	
+	public void setValues(double[] values) {
 		this.values = values;
 	}
+	
 	public int getIndex() {
 		return index;
 	}

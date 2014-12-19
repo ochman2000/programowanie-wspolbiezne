@@ -44,27 +44,12 @@ public class Cluster {
 		MacierzeDto macierze;
 		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
 			logger.info("Przyjêto macierz do obliczenia");
-//			if (ois.equals("bye")) { // albo kiedy ca³a macierz zosta³a
-										// wype³niona
-//				ois.close();
-//				oos.close();
-//				kkSocket.close();
-//				break;
-//			}
-			// Initiate conversation with client
-			 Obliczenia obliczenia = new Obliczenia();
-			 ResultDto result = obliczenia.processInput(macierze);
-			// out.println(outputLine);
-
-			// while ((inputLine = in.readLine()) != null) {
-			// outputLine = obliczenia.processInput(inputLine);
-			// out.println(obliczenia.tooutputLine);
-			// }
-
-//			oos.writeObject("bye"); // daj znak koñca
+			Obliczenia obliczenia = new Obliczenia();
+			ResultDto result = obliczenia.processInput(macierze);
 			oos.writeObject(result);
 		}
 	}
+	
 	public static void main(String[] args) {
 		new Cluster(4444);
 	}

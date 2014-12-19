@@ -15,22 +15,9 @@ public class Client {
 	private Logger logger;
 	private final int LICZBA_PROCESORÓW = 4;
 	private final int N = 64;
-//	int[][] A={ { 1, 2, 3, 4 },
-//				{ 5, 6, 7, 8 },
-//				{ 9, 10, 11, 12 },
-//				{ 13, 14, 15, 16 } };
-//
-//	int[][] B={ { 1, 2, 3, 4 }, 
-//				{ 5, 6, 7, 8 }, 
-//				{ 9, 10, 11, 12 },
-//				{ 13, 14, 15, 16 } };
-//	
-//	int[][] C={ { 1, 2, 3, 4 }, 
-//				{ 5, 6, 7, 8 }, 
-//				{ 9, 10, 11, 12 },
-//				{ 13, 14, 15, 16 } };
 	
-	//NIESTETY MUSZÊ POWTÓRZYÆ TO TRZY RAZY, ABY PRZYPISA£O INNE ADRESY
+	//NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
+	//ABY KOMPILATOR PRZYPISA£ INNE ADRESY
 	double[][] A = new double[N][N];
 	double[][] B = new double[N][N];
 	double[][] C = new double[N][N];
