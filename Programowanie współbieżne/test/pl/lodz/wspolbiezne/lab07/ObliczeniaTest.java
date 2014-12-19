@@ -245,37 +245,37 @@ public class ObliczeniaTest {
 //		assertArrayEquals(C, ab);
 //	}
 	
-//	@Test
-//	public void test08() {
-//		int LICZBA_PROCESORÓW=4;
-//		int[][] A={ { 1, 2, 3, 4 },
-//					{ 5, 6, 7, 8 },
-//					{ 9, 10, 11, 12 },
-//					{ 13, 14, 15, 16 } };
-//
-//		int[][] B={ { 1, 2, 3, 4 },
-//					{ 5, 6, 7, 8 },
-//					{ 9, 10, 11, 12 },
-//					{ 13, 14, 15, 16 } };
-//		int[][] ab = new int[N][N];
-//		
-//		Obliczenia obliczenia = new Obliczenia(A, B);
-//		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
-//			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
-//			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
-//			MacierzeDto block = obliczenia.getBlock(start, end);
-//			assertNotEquals(0, (long)block.getColumn(0).getValue(0));
-//			ResultDto result = obliczenia.processInput(block);
-//			System.out.println("Result "+proces+"\n"+result);
-//			obliczenia.merge(result, ab);
-//		}
-//		System.out.println(Obliczenia.toString(ab));
-//		int[][] C={ { 90, 100, 110, 120 },
-//					{ 202, 228, 254, 280 },
-//					{ 314, 356, 398, 440 },
-//					{ 426, 484, 542, 600 } };
-//		assertArrayEquals(C, ab);
-//	}
+	@Test
+	public void test08() {
+		int LICZBA_PROCESORÓW=4;
+		double[][] A={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+
+		double[][] B={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+		double[][] ab = new double[N][N];
+		
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
+			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			MacierzeDto block = obliczenia.getBlock(start, end);
+			assertNotEquals(0, block.getColumn(0).getValue(0));
+			ResultDto result = obliczenia.processInput(block);
+			System.out.println("Result "+proces+"\n"+result);
+			obliczenia.merge(result, ab);
+		}
+		System.out.println(Obliczenia.toString(ab));
+		double[][] C={ { 90, 100, 110, 120 },
+					{ 202, 228, 254, 280 },
+					{ 314, 356, 398, 440 },
+					{ 426, 484, 542, 600 } };
+		assertArrayEquals(C, ab);
+	}
 	
 	@Test
 	public void test09() {

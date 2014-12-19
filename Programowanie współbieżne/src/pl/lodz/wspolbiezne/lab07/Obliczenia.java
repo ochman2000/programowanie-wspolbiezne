@@ -54,10 +54,10 @@ public class Obliczenia {
 		for (int j=0; j<N; j++) {
 			Zbiór z2 = new Zbiór();
 			z2.setIndex(j);
-			List<Double> values2 = new ArrayList<>(N);
+			double[] values2 = new double[N];
 			for (int i=0; i<N; i++) {
 //				C[1][j][i] = A[i][start+j];
-				values2.add(A[i][j]);
+				values2[i] = (A[i][j]);
 			}
 			z2.setValues(values2);
 			columns.add(z2);
@@ -151,8 +151,8 @@ public class Obliczenia {
 	
 	public ResultDto processInput(MacierzeDto macierze) {
 		ResultDto result = new ResultDto();
-		int liczbaKolumn = macierze.getColumns().size();
-		int liczbaWierszy = macierze.getRows().size();
+		int liczbaKolumn = macierze.getColumns().length;
+		int liczbaWierszy = macierze.getRows().length;
 		List<Element> elements = new ArrayList<>(liczbaKolumn*liczbaWierszy);
 		for (int i=0; i<liczbaKolumn; i++) {
 			for (int j=0; j<liczbaWierszy; j++) {
