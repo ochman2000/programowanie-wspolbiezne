@@ -12,9 +12,10 @@ import java.util.logging.Logger;
 
 public class Client {
 	
+	private final int LICZBA_PROCESORÓW = 1;
+	private final int N = 1024;
 	private Logger logger;
-	private final int LICZBA_PROCESORÓW = 4;
-	private final int N = 64;
+	private long start;
 	
 	//NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
 	//ABY KOMPILATOR PRZYPISA£ INNE ADRESY
@@ -23,6 +24,7 @@ public class Client {
 	double[][] C = new double[N][N];
 
 	public Client(String hostName, int portNumber) {
+		start = System.currentTimeMillis();
 		logger = Obliczenia.getCustomLogger();
 		logger.info("Connecting to server at port: "+portNumber+" ...");
 		for (int i=0; i<N; i++) {
@@ -33,16 +35,19 @@ public class Client {
 		try {
 			Socket kkSocket = new Socket(hostName, portNumber);
 			dispatch(kkSocket);
+			logger.info("Zakoñczono obliczanie.");
+			System.out.println("Ca³kowity czas wykonania: "+
+					(int)((System.currentTimeMillis()-start)/1000)+" sekund.");
 			
 		} catch (UnknownHostException e) {
-			System.err.println("Don't know about host " + hostName);
+			logger.severe("Don't know about host " + hostName);
 			System.exit(1);
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for the connection to "
+			logger.severe("Couldn't get I/O for the connection to "
 					+ hostName);
 			System.exit(1);
 		} catch (ClassNotFoundException e) {
-			System.err.println("le skastowany typ int[][][] / double[][][]");
+			logger.severe("le skastowany typ int[][][] / double[][][]");
 			System.exit(1);
 		}
 	}
@@ -62,7 +67,6 @@ public class Client {
 		obliczenia = new Obliczenia(AB, C);
 		double[][] ABC = multiply(oos, ois, obliczenia);
 		
-		logger.info("Zakoñczono mno¿enie");
 		if (N<=8) {
 			System.out.println(Obliczenia.toString(ABC));
 		}

@@ -38,7 +38,9 @@ public class ResultDto implements Serializable {
 class Element implements Serializable {
 	private static final long serialVersionUID = 1363948434542689151L;
 	private int wiersz;
-
+	private int kolumna;
+	private double wartoœæ;
+	
 	public Element(int j, int i, int k) {
 		this.kolumna = j;
 		this.wiersz = i;
@@ -76,7 +78,4 @@ class Element implements Serializable {
 	public void setWartoœæ(double wartoœæ) {
 		this.wartoœæ = wartoœæ;
 	}
-
-	private int kolumna;
-	private double wartoœæ;
 }

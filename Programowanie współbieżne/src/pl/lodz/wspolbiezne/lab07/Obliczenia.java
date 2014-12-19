@@ -36,7 +36,6 @@ public class Obliczenia {
 		MacierzeDto D = new MacierzeDto();
 		
 		int l = end - start;
-//		int[][][] C = new int[2][l][N];
 		List<Zbiór> rows = new ArrayList<>(N);
 		List<Zbiór> columns = new ArrayList<>(l);
 		
@@ -45,7 +44,6 @@ public class Obliczenia {
 			z1.setIndex(start+j);
 			List<Double> values1 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
-//				C[0][j][i] = B[start+j][i];
 				values1.add(B[start+j][i]);
 			}
 			z1.setValues(values1);
@@ -56,7 +54,6 @@ public class Obliczenia {
 			z2.setIndex(j);
 			double[] values2 = new double[N];
 			for (int i=0; i<N; i++) {
-//				C[1][j][i] = A[i][start+j];
 				values2[i] = (A[i][j]);
 			}
 			z2.setValues(values2);

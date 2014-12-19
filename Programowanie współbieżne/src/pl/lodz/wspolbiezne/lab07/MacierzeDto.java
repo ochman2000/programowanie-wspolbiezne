@@ -44,7 +44,6 @@ public class MacierzeDto implements Serializable {
 		}
 		this.columns = target;
 	}
-
 }
 
 class Zbiór implements Serializable {

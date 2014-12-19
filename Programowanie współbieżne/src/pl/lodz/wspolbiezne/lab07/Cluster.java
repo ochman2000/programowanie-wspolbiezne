@@ -14,7 +14,7 @@ public class Cluster {
 
 	public Cluster(int portNumber) {
 		logger = Obliczenia.getCustomLogger();
-		logger.info("Server started at 127.0.0.1 port "+portNumber);
+		logger.info("Server started at 127.0.0.1:"+portNumber);
 		try {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 			Socket clientSocket = serverSocket.accept();
@@ -23,12 +23,12 @@ public class Cluster {
 			serverSocket.close();
 
 		} catch (IOException e) {
-			System.out
-					.println("Exception caught when trying to listen on port "
+			logger.severe("Exception caught when trying to listen on port "
 							+ portNumber + " or listening for a connection");
-			System.out.println(e.getMessage());
+			logger.severe(e.getMessage());
+			System.exit(1);
 		} catch (ClassNotFoundException e) {
-			System.err.println("èle skastowany typ int[][][] / double[][][]");
+			logger.severe("èle skastowany typ int[][][] / double[][][]");
 			System.exit(1);
 
 		}
