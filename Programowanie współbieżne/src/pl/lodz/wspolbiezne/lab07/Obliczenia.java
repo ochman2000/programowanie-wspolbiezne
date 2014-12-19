@@ -50,25 +50,29 @@ public class Obliczenia {
 		MacierzeDto D = new MacierzeDto();
 		
 		int l = end - start;
-		int[][][] C = new int[2][l][N];
-		List<Zbiór> rows = new ArrayList<>(l);
+//		int[][][] C = new int[2][l][N];
+		List<Zbiór> rows = new ArrayList<>(N);
 		List<Zbiór> columns = new ArrayList<>(l);
 		
 		for (int j=0; j<l; j++) {
 			Zbiór z1 = new Zbiór();
-			Zbiór z2 = new Zbiór();
 			z1.setIndex(start+j);
-			z2.setIndex(start+j);
 			List<Integer> values1 = new ArrayList<>(N);
-			List<Integer> values2 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
-				C[0][j][i] = B[start+j][i];
+//				C[0][j][i] = B[start+j][i];
 				values1.add(B[start+j][i]);
-				C[1][j][i] = A[i][start+j];
-				values2.add(A[i][start+j]);
 			}
 			z1.setValues(values1);
 			rows.add(z1);
+		}
+		for (int j=0; j<N; j++) {
+			Zbiór z2 = new Zbiór();
+			z2.setIndex(j);
+			List<Integer> values2 = new ArrayList<>(N);
+			for (int i=0; i<N; i++) {
+//				C[1][j][i] = A[i][start+j];
+				values2.add(A[i][j]);
+			}
 			z2.setValues(values2);
 			columns.add(z2);
 		}
@@ -170,9 +174,16 @@ public class Obliczenia {
 
 
 
-	public void merge(ResultDto result, int[][] ab) {
+	public void mergeInverted(ResultDto result, int[][] ab) {
 		for (Element e : result.getElements()) {
 			ab[e.getKolumna()][e.getWiersz()] = e.getWartoœæ();
 		}
 	}
+	
+	public void merge(ResultDto result, int[][] ab) {
+		for (Element e : result.getElements()) {
+			ab[e.getWiersz()][e.getKolumna()] = e.getWartoœæ();
+		}
+	}
+
 }

@@ -21,7 +21,7 @@ public class ObliczeniaTest {
 		Obliczenia obliczenia = new Obliczenia(A, B);
 		
 		MacierzeDto block01 = obliczenia.getBlock(0, 2);
-		assertEquals(2, block01.getColumns().size());
+		assertEquals(4, block01.getColumns().size());
 		int C00 = block01.getColumn(0).getValue(0);
 		assertEquals(1, C00);
 		int C01 = block01.getColumn(0).getValue(1);
@@ -59,14 +59,14 @@ public class ObliczeniaTest {
 		Obliczenia obliczenia = new Obliczenia(A, B);
 		
 		MacierzeDto block01 = obliczenia.getBlock(2, 4);
-		assertEquals(2, block01.getColumns().size());
-		int C00 = block01.getColumn(0).getValue(0);
+		assertEquals(4, block01.getColumns().size());
+		int C00 = block01.getColumn(2).getValue(0);
 		assertEquals(3, C00);
-		int C01 = block01.getColumn(0).getValue(1);
+		int C01 = block01.getColumn(2).getValue(1);
 		assertEquals(7, C01);
-		int C02 = block01.getColumn(0).getValue(2);
+		int C02 = block01.getColumn(2).getValue(2);
 		assertEquals(11, C02);
-		int C03 = block01.getColumn(0).getValue(3);
+		int C03 = block01.getColumn(2).getValue(3);
 		assertEquals(15, C03);
 		
 		int C10 = block01.getRow(1).getValue(0);
@@ -142,10 +142,10 @@ public class ObliczeniaTest {
 		int index;
 		
 		index = block24.getColumn(0).getIndex();
-		assertEquals(2, index);
+		assertEquals(0, index);
 		
 		index = block24.getColumn(1).getIndex();
-		assertEquals(3, index);
+		assertEquals(1, index);
 		
 		index = block24.getRow(0).getIndex();
 		assertEquals(2, index);
@@ -158,7 +158,7 @@ public class ObliczeniaTest {
 	private static final int N = 4;
 	
 	@Test
-	public void test06() {
+	public void test05() {
 		int LICZBA_PROCESORÓW=2;
 		int[][] A={ { 1, 2, 3, 4 },
 					{ 5, 6, 7, 8 },
@@ -175,14 +175,77 @@ public class ObliczeniaTest {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto block = obliczenia.getBlock(start, end);
-			assertEquals(N/LICZBA_PROCESORÓW, block.getColumns().size());
+			assertEquals(N, block.getColumns().size());
 			assertEquals(N/LICZBA_PROCESORÓW, block.getRows().size());
 		}
+	}
+	@Test
+	public void test06() {
+		int LICZBA_PROCESORÓW=1;
+		int[][] A={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+
+		int[][] B={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+		int[][] ab = new int[N][N];
+		
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
+			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			MacierzeDto block = obliczenia.getBlock(start, end);
+			assertNotEquals(0, (long)block.getColumn(0).getValue(0));
+			ResultDto result = obliczenia.processInput(block);
+			System.out.println("Result "+proces+"\n"+result);
+			obliczenia.merge(result, ab);
+		}
+		System.out.println(Obliczenia.toString(ab));
+		int[][] C={ { 90, 100, 110, 120 },
+					{ 202, 228, 254, 280 },
+					{ 314, 356, 398, 440 },
+					{ 426, 484, 542, 600 } };
+		assertArrayEquals(C, ab);
 	}
 	
 	@Test
 	public void test07() {
 		int LICZBA_PROCESORÓW=2;
+		int[][] A={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+
+		int[][] B={ { 1, 2, 3, 4 },
+					{ 5, 6, 7, 8 },
+					{ 9, 10, 11, 12 },
+					{ 13, 14, 15, 16 } };
+		int[][] ab = new int[N][N];
+		
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
+			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			MacierzeDto block = obliczenia.getBlock(start, end);
+			assertNotEquals(0, (long)block.getColumn(0).getValue(0));
+			ResultDto result = obliczenia.processInput(block);
+			System.out.println("Result "+proces+"\n"+result);
+			obliczenia.merge(result, ab);
+		}
+		System.out.println(Obliczenia.toString(ab));
+		int[][] C={ { 90, 100, 110, 120 },
+					{ 202, 228, 254, 280 },
+					{ 314, 356, 398, 440 },
+					{ 426, 484, 542, 600 } };
+		assertArrayEquals(C, ab);
+	}
+	
+	@Test
+	public void test08() {
+		int LICZBA_PROCESORÓW=4;
 		int[][] A={ { 1, 2, 3, 4 },
 					{ 5, 6, 7, 8 },
 					{ 9, 10, 11, 12 },
