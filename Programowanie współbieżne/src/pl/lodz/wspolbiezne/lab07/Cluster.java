@@ -14,7 +14,7 @@ public class Cluster {
 
 	public Cluster(int portNumber) {
 		logger = Obliczenia.getCustomLogger();
-		logger.info("Starting server at port: "+portNumber+" ...");
+		logger.info("Server started at 127.0.0.1 port "+portNumber);
 		try {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 			Socket clientSocket = serverSocket.accept();
@@ -32,7 +32,6 @@ public class Cluster {
 			System.exit(1);
 
 		}
-		logger.info("Server started at 127.0.0.1 port "+portNumber);
 	}
 
 	private void processInput(Socket kkSocket) throws IOException,

@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 public class Obliczenia {
 
 	private int N;
-	private int[][] A,B;
+	private double[][] A,B;
 
-	public Obliczenia(int[][] A, int[][] B) {
+	public Obliczenia(double[][] A, double[][] B) {
 		if (!(A.length == A[0].length 
 				&& A[0].length == B.length 
 				&& B.length == B[0].length)) {
@@ -31,20 +31,6 @@ public class Obliczenia {
 	public Obliczenia() {
 		
 	}
-
-
-
-//	public int[][][] getBlock(int start, int end) {
-//		int l = end - start;
-//		int[][][] C = new int[2][l][N];
-//		for (int j=0; j<l; j++) {
-//			for (int i=0; i<N; i++) {
-//				C[0][j][i] = B[start+j][i];
-//				C[1][j][i] = A[i][start+j];
-//			}
-//		}
-//		return C;
-//	}
 	
 	public MacierzeDto getBlock(int start, int end) {
 		MacierzeDto D = new MacierzeDto();
@@ -57,7 +43,7 @@ public class Obliczenia {
 		for (int j=0; j<l; j++) {
 			Zbiór z1 = new Zbiór();
 			z1.setIndex(start+j);
-			List<Integer> values1 = new ArrayList<>(N);
+			List<Double> values1 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
 //				C[0][j][i] = B[start+j][i];
 				values1.add(B[start+j][i]);
@@ -68,7 +54,7 @@ public class Obliczenia {
 		for (int j=0; j<N; j++) {
 			Zbiór z2 = new Zbiór();
 			z2.setIndex(j);
-			List<Integer> values2 = new ArrayList<>(N);
+			List<Double> values2 = new ArrayList<>(N);
 			for (int i=0; i<N; i++) {
 //				C[1][j][i] = A[i][start+j];
 				values2.add(A[i][j]);
@@ -88,8 +74,26 @@ public class Obliczenia {
 		}
 		return sum;
 	}
+	
+	public static String toString(double[][] c) {
+		if (c == null)
+			return "null";
 
-	public static String toString(int[][] c) {
+		int iMax = c.length - 1;
+		if (iMax == -1)
+			return "[]";
+
+		StringBuilder b = new StringBuilder();
+		b.append('[');
+		for (int i = 0;; i++) {
+			b.append(Arrays.toString(c[i]));
+			if (i == iMax)
+				return b.append(']').toString();
+			b.append(",\n");
+		}
+	}
+	
+	public static String arrayToString(int[][] c) {
 		if (c == null)
 			return "null";
 
@@ -121,7 +125,7 @@ public class Obliczenia {
 				sb.append(new SimpleDateFormat("HH:mm:ss:SSS").format(cal
 						.getTime()));
 				sb.append("\t");
-				sb.append(record.getClass());
+				sb.append(record.getSourceClassName());
 				sb.append("\tmethod: ");
 				sb.append(record.getSourceMethodName());
 				sb.append("()\t");
@@ -158,32 +162,26 @@ public class Obliczenia {
 				int v = 0;
 				int size = macierze.getColumn(i).getValues().size();
 				for (int m=0; m<size; m++) {
-//					for (int k=0; k<size; k++) {
-						v += macierze.getColumn(i).getValue(m)
-							*macierze.getRow(j).getValue(m);
-//					}
+					v += macierze.getColumn(i).getValue(m)
+						*macierze.getRow(j).getValue(m);
 				}
 				e.setWartoœæ(v);
 				elements.add(e);
 			}
 		}
 		result.setElements(elements);
-//		System.out.println(result);
 		return result;
 	}
 
-
-
-	public void mergeInverted(ResultDto result, int[][] ab) {
+	public void mergeInverted(ResultDto result, double[][] ab) {
 		for (Element e : result.getElements()) {
 			ab[e.getKolumna()][e.getWiersz()] = e.getWartoœæ();
 		}
 	}
 	
-	public void merge(ResultDto result, int[][] ab) {
+	public void merge(ResultDto result, double[][] ab) {
 		for (Element e : result.getElements()) {
 			ab[e.getWiersz()][e.getKolumna()] = e.getWartoœæ();
 		}
 	}
-
 }

@@ -7,27 +7,42 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class Client {
 	
 	private Logger logger;
 	private final int LICZBA_PROCESORÓW = 4;
-	private int N;
-	int[][] A={ { 1, 2, 3, 4 },
-				{ 5, 6, 7, 8 },
-				{ 9, 10, 11, 12 },
-				{ 13, 14, 15, 16 } };
-
-	int[][] B={ { 1, 2, 3, 4 }, 
-				{ 5, 6, 7, 8 }, 
-				{ 9, 10, 11, 12 },
-				{ 13, 14, 15, 16 } };
+	private final int N = 4;
+//	int[][] A={ { 1, 2, 3, 4 },
+//				{ 5, 6, 7, 8 },
+//				{ 9, 10, 11, 12 },
+//				{ 13, 14, 15, 16 } };
+//
+//	int[][] B={ { 1, 2, 3, 4 }, 
+//				{ 5, 6, 7, 8 }, 
+//				{ 9, 10, 11, 12 },
+//				{ 13, 14, 15, 16 } };
+//	
+//	int[][] C={ { 1, 2, 3, 4 }, 
+//				{ 5, 6, 7, 8 }, 
+//				{ 9, 10, 11, 12 },
+//				{ 13, 14, 15, 16 } };
+	
+	//NIESTETY MUSZÊ POWTÓRZYÆ TO TRZY RAZY, ABY PRZYPISA£O INNE ADRESY
+	double[][] A = new double[N][N];
+	double[][] B = new double[N][N];
+	double[][] C = new double[N][N];
 
 	public Client(String hostName, int portNumber) {
 		logger = Obliczenia.getCustomLogger();
 		logger.info("Connecting to server at port: "+portNumber+" ...");
-		N = A.length;
+		for (int i=0; i<N; i++) {
+			A[i] = new Random().doubles(N).toArray();
+			B[i] = new Random().doubles(N).toArray();
+			C[i] = new Random().doubles(N).toArray();
+		}
 		try {
 			Socket kkSocket = new Socket(hostName, portNumber);
 			dispatch(kkSocket);
@@ -48,27 +63,42 @@ public class Client {
 	private void dispatch(Socket kkSocket) throws IOException, ClassNotFoundException {
 		OutputStream outputStream = kkSocket.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
-		Obliczenia obliczenia = new Obliczenia(A, B);
+		InputStream inputStream = kkSocket.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		
+		logger.info("Trwa mno¿enie macierzy AxB");
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		double[][] AB = multiply(oos, ois, obliczenia);
+		
+		logger.info("Trwa mno¿enie macierzy ABxC");
+		obliczenia = new Obliczenia(AB, C);
+		double[][] ABC = multiply(oos, ois, obliczenia);
+		
+		logger.info("Zakoñczono mno¿enie");
+		System.out.println(Obliczenia.toString(ABC));
+	}
+
+	private double[][] multiply(ObjectOutputStream oos, ObjectInputStream ois,
+			Obliczenia obliczenia) throws IOException, ClassNotFoundException {
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto C = obliczenia.getBlock(start, end);
-			Logger.getGlobal().info("Wysy³ka bloku nr: "+proces);
+			Logger.getGlobal().info("Trwa wysy³ka bloku nr "+proces);
 			oos.writeObject(C);
-			logger.info("Dispatched process no. "+proces);
+			logger.info("Zakoñczono przesy³anie bloku nr "+proces);
 		}
 		
 		//tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
 		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
-		InputStream inputStream = kkSocket.getInputStream();
-		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		ResultDto macierze;
-		int[][] AB = new int[N][N];
+		double[][] AB = new double[N][N];
+		int i=LICZBA_PROCESORÓW;
 		while ((macierze = (ResultDto) ois.readObject()) != null) {
 			obliczenia.merge(macierze, AB);
+			if (--i==0) break;
 		}
-		System.out.println(Obliczenia.toString(AB));
+		return AB;
 	}
 
 	public int getBeginningOfInterval(int interval, int totalIntervals) {
