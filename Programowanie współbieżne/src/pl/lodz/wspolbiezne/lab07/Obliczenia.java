@@ -159,7 +159,7 @@ public class Obliczenia {
 				Element e = new Element();
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());
-				int v = 0;
+				double v = 0;
 				int size = macierze.getColumn(i).getValues().size();
 				for (int m=0; m<size; m++) {
 					v += macierze.getColumn(i).getValue(m)

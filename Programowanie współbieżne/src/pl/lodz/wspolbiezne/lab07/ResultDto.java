@@ -59,12 +59,12 @@ class Element implements Serializable {
 	public void setKolumna(int kolumna) {
 		this.kolumna = kolumna;
 	}
-	public int getWartoœæ() {
+	public double getWartoœæ() {
 		return wartoœæ;
 	}
-	public void setWartoœæ(int wartoœæ) {
+	public void setWartoœæ(double wartoœæ) {
 		this.wartoœæ = wartoœæ;
 	}
 	private int kolumna;
-	private int wartoœæ;
+	private double wartoœæ;
 }

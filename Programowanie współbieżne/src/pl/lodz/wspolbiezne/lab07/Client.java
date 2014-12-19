@@ -14,7 +14,7 @@ public class Client {
 	
 	private Logger logger;
 	private final int LICZBA_PROCESORÓW = 4;
-	private final int N = 4;
+	private final int N = 64;
 //	int[][] A={ { 1, 2, 3, 4 },
 //				{ 5, 6, 7, 8 },
 //				{ 9, 10, 11, 12 },
@@ -60,6 +60,7 @@ public class Client {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void dispatch(Socket kkSocket) throws IOException, ClassNotFoundException {
 		OutputStream outputStream = kkSocket.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
@@ -75,7 +76,9 @@ public class Client {
 		double[][] ABC = multiply(oos, ois, obliczenia);
 		
 		logger.info("Zakoñczono mno¿enie");
-		System.out.println(Obliczenia.toString(ABC));
+		if (N<=8) {
+			System.out.println(Obliczenia.toString(ABC));
+		}
 	}
 
 	private double[][] multiply(ObjectOutputStream oos, ObjectInputStream ois,
