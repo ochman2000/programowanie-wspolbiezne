@@ -30,7 +30,6 @@ public class Cluster {
 		} catch (ClassNotFoundException e) {
 			logger.severe("èle skastowany typ int[][][] / double[][][]");
 			System.exit(1);
-
 		}
 	}
 
@@ -46,6 +45,8 @@ public class Cluster {
 			logger.info("PrzyjÍto macierz do obliczenia");
 			Obliczenia obliczenia = new Obliczenia();
 			ResultDto result = obliczenia.processInput(macierze);
+			logger.info("Trwa wysy≥anie obliczeÒ (" +
+							Obliczenia.sizeOf(result)+" bytes)");
 			oos.writeObject(result);
 		}
 	}

@@ -1,5 +1,8 @@
 package pl.lodz.wspolbiezne.lab07;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,5 +183,17 @@ public class Obliczenia {
 		for (Element e : result.getElements()) {
 			ab[e.getWiersz()][e.getKolumna()] = e.getWartoœæ();
 		}
+	}
+	
+	public static int sizeOf(Object obj) throws IOException {
+
+	    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+	    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+
+	    objectOutputStream.writeObject(obj);
+	    objectOutputStream.flush();
+	    objectOutputStream.close();
+
+	    return byteOutputStream.toByteArray().length;
 	}
 }

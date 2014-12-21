@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 
 public class Client {
 	
-	private final int LICZBA_PROCESORÓW = 1;
-	private final int N = 1024;
+	private final int LICZBA_PROCESORÓW = 8;
+	private final int N = 64;
 	private Logger logger;
 	private long start;
 	
@@ -38,7 +38,6 @@ public class Client {
 			logger.info("Zakoñczono obliczanie.");
 			System.out.println("Ca³kowity czas wykonania: "+
 					(int)((System.currentTimeMillis()-start)/1000)+" sekund.");
-			
 		} catch (UnknownHostException e) {
 			logger.severe("Don't know about host " + hostName);
 			System.exit(1);
@@ -80,7 +79,8 @@ public class Client {
 			MacierzeDto C = obliczenia.getBlock(start, end);
 			Logger.getGlobal().info("Trwa wysy³ka bloku nr "+proces);
 			oos.writeObject(C);
-			logger.info("Zakoñczono przesy³anie bloku nr "+proces);
+			logger.info("Zakoñczono przesy³anie bloku nr "+proces+" ("
+							+Obliczenia.sizeOf(C)+" bytes)");
 		}
 		
 		//tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
