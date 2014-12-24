@@ -2,6 +2,7 @@ package pl.lodz.wspolbiezne.lab07;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.junit.Test;
@@ -307,6 +308,56 @@ public class ObliczeniaTest {
 		}
 	}
 	
+	@Test
+	public void test10() {
+		int LICZBA_PROCESORÓW=4;
+		int N = 1024;
+		
+		//NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
+		//ABY KOMPILATOR PRZYPISA£ INNE ADRESY
+		double[][] A = new double[N][N];
+		double[][] B = new double[N][N];
+		double[][] C = new double[N][N];
+		double[][] ab = new double[N][N];
+
+		for (int i=0; i<N; i++) {
+			A[i] = new Random().doubles(N).toArray();
+			B[i] = new Random().doubles(N).toArray();
+			C[i] = new Random().doubles(N).toArray();
+		}
+		
+		Obliczenia obliczenia = new Obliczenia(A, B);
+		for (int proces=0; proces<LICZBA_PROCESORÓW; proces++) {
+			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
+			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
+			MacierzeDto block = obliczenia.getBlock(start, end);
+			assertNotEquals(0, block.getColumn(0).getValue(0));
+			ResultDto result = obliczenia.processInput(block);
+			try {
+				boolean si = false;
+				System.out.println("Przeprocesowano obliczenia na wêŸle "+(proces+1));
+				int sizeOfBlock = Obliczenia.sizeOf(block);
+				String s = Obliczenia.humanReadableByteCount(sizeOfBlock, si);
+				System.out.println("Block size: "+sizeOfBlock +" bytes ("+s+")");
+				int sizeOfValues = Obliczenia.sizeOf(block.getColumn(1).getValues());
+				s = Obliczenia.humanReadableByteCount(sizeOfValues, si);
+				System.out.println("Block array size: "+sizeOfValues +" bytes ("+s+")");
+				int sizeOfResult = Obliczenia.sizeOf(result);
+				s = Obliczenia.humanReadableByteCount(sizeOfResult, si);
+				System.out.println("Rozmiar pliku wynikowego: "+ sizeOfResult +" bytes ("+s+")");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			obliczenia.merge(result, ab);
+		}
+	}
+	
+	@Test
+	public void test11() {
+		String s = Obliczenia.humanReadableByteCount(1024*1024*1024, false);
+		System.out.println(s);
+	}
+	
 	public int getBeginningOfInterval(int interval, int totalIntervals) {
 		if (totalIntervals <= interval) {
 			throw new IllegalArgumentException(
@@ -327,4 +378,6 @@ public class ObliczeniaTest {
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) ((fraction * N) + rozmiarPrzedzialu);
 	}
+	
+	
 }

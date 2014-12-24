@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class Client {
 	
-	private final int LICZBA_PROCESORÓW = 8;
+	private final int LICZBA_PROCESORÓW = 1;
 	private final int N = 64;
 	private Logger logger;
 	private long start;
@@ -34,6 +34,10 @@ public class Client {
 		}
 		try {
 			Socket kkSocket = new Socket(hostName, portNumber);
+			int receiveBufferSize = kkSocket.getReceiveBufferSize();
+			logger.info("Rozmiar bufora: (" + receiveBufferSize + " bytes) ("
+					+Obliczenia.humanReadableByteCount(receiveBufferSize, false)
+					+")");
 			dispatch(kkSocket);
 			logger.info("Zakoñczono obliczanie.");
 			System.out.println("Ca³kowity czas wykonania: "+
@@ -55,6 +59,7 @@ public class Client {
 	private void dispatch(Socket kkSocket) throws IOException, ClassNotFoundException {
 		OutputStream outputStream = kkSocket.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
+		
 		InputStream inputStream = kkSocket.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		
@@ -78,9 +83,15 @@ public class Client {
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto C = obliczenia.getBlock(start, end);
 			Logger.getGlobal().info("Trwa wysy³ka bloku nr "+proces);
+			long startTime = System.currentTimeMillis();
+			
 			oos.writeObject(C);
+			int sizeOfC = Obliczenia.sizeOf(C);
+			long duration = System.currentTimeMillis()-startTime;
 			logger.info("Zakoñczono przesy³anie bloku nr "+proces+" ("
-							+Obliczenia.sizeOf(C)+" bytes)");
+							+Obliczenia.humanReadableByteCount(sizeOfC, false)+")");
+			long speed = (long) (sizeOfC/(duration/1000000d));
+			logger.info("Write speed: " + Obliczenia.humanReadableByteCount(speed, false)+"/s");
 		}
 		
 		//tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
@@ -88,7 +99,15 @@ public class Client {
 		ResultDto macierze;
 		double[][] AB = new double[N][N];
 		int i=LICZBA_PROCESORÓW;
+		int size;
+//		while ((size = ois.available())>0){
 		while ((macierze = (ResultDto) ois.readObject()) != null) {
+			size = Obliczenia.sizeOf(macierze);
+			logger.info("Trwa odbieranie "+Obliczenia.humanReadableByteCount(size, false));
+//			long startTime = System.currentTimeMillis();
+//			macierze = (ResultDto) ois.readObject();
+//			long duration = System.currentTimeMillis()-startTime;
+//			logger.info("Read speed: " + (size/(duration/1000000d))+" kB/s");
 			obliczenia.merge(macierze, AB);
 			if (--i==0) break;
 		}

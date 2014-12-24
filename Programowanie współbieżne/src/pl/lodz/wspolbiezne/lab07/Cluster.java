@@ -35,19 +35,30 @@ public class Cluster {
 
 	private void processInput(Socket kkSocket) throws IOException,
 			ClassNotFoundException {
+		int receiveBufferSize = kkSocket.getReceiveBufferSize();
+		logger.info("Rozmiar bufora: (" + receiveBufferSize + " bytes) ("
+				+Obliczenia.humanReadableByteCount(receiveBufferSize, false)
+				+")");
+		OutputStream outputStream = kkSocket.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
+		
 		InputStream inputStream = kkSocket.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
-		OutputStream outputStream = kkSocket.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 
 		MacierzeDto macierze;
 		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
 			logger.info("Przyjêto macierz do obliczenia");
 			Obliczenia obliczenia = new Obliczenia();
 			ResultDto result = obliczenia.processInput(macierze);
+			long startTime = System.currentTimeMillis();
+			int sizeOfResult = Obliczenia.sizeOf(result);
 			logger.info("Trwa wysy³anie obliczeñ (" +
-							Obliczenia.sizeOf(result)+" bytes)");
+							sizeOfResult+" bytes)" +" ("+
+					Obliczenia.humanReadableByteCount(sizeOfResult, false)+")");
 			oos.writeObject(result);
+			long duration = System.currentTimeMillis()-startTime;
+			long speed = (long) ((long) sizeOfResult/(duration/1000d));
+			logger.info("Write speed: " + Obliczenia.humanReadableByteCount(speed, false)+"/s");
 		}
 	}
 	
