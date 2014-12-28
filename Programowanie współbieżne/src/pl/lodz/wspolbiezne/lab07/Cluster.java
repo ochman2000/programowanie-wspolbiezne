@@ -1,5 +1,7 @@
 package pl.lodz.wspolbiezne.lab07;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -14,7 +16,7 @@ public class Cluster {
 
 	public Cluster(int portNumber) {
 		logger = Obliczenia.getCustomLogger();
-		logger.info("Server started at 127.0.0.1:"+portNumber);
+		logger.info("Server started at 127.0.0.1:" + portNumber);
 		try {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 			Socket clientSocket = serverSocket.accept();
@@ -24,7 +26,7 @@ public class Cluster {
 
 		} catch (IOException e) {
 			logger.severe("Exception caught when trying to listen on port "
-							+ portNumber + " or listening for a connection");
+					+ portNumber + " or listening for a connection");
 			logger.severe(e.getMessage());
 			System.exit(1);
 		} catch (ClassNotFoundException e) {
@@ -37,31 +39,53 @@ public class Cluster {
 			ClassNotFoundException {
 		int receiveBufferSize = kkSocket.getReceiveBufferSize();
 		logger.info("Rozmiar bufora: (" + receiveBufferSize + " bytes) ("
-				+Obliczenia.humanReadableByteCount(receiveBufferSize, false)
-				+")");
+				+ Obliczenia.humanReadableByteCount(receiveBufferSize, false)
+				+ ")");
 		OutputStream outputStream = kkSocket.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
-		
-		InputStream inputStream = kkSocket.getInputStream();
-		ObjectInputStream ois = new ObjectInputStream(inputStream);
+		BufferedOutputStream bufferedOut = new BufferedOutputStream(
+				outputStream);
+		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
+		oos.flush();
 
+		InputStream inputStream = kkSocket.getInputStream();
+
+		System.out.println("Trwa nas³uchiwanie...");
 		MacierzeDto macierze;
-		while ((macierze = (MacierzeDto) ois.readObject()) != null) {
-			logger.info("Przyjêto macierz do obliczenia");
-			Obliczenia obliczenia = new Obliczenia();
-			ResultDto result = obliczenia.processInput(macierze);
-			long startTime = System.currentTimeMillis();
-			int sizeOfResult = Obliczenia.sizeOf(result);
-			logger.info("Trwa wysy³anie obliczeñ (" +
-							sizeOfResult+" bytes)" +" ("+
-					Obliczenia.humanReadableByteCount(sizeOfResult, false)+")");
-			oos.writeObject(result);
-			long duration = System.currentTimeMillis()-startTime;
-			long speed = (long) ((long) sizeOfResult/(duration/1000d));
-			logger.info("Write speed: " + Obliczenia.humanReadableByteCount(speed, false)+"/s");
+		while (true) {
+			if (inputStream.available() != 0) {
+				BufferedInputStream bufferedIn = new BufferedInputStream(
+						inputStream);
+				ObjectInputStream ois = new ObjectInputStream(bufferedIn);
+
+				if ((macierze = (MacierzeDto) ois.readObject()) != null) {
+					logger.info("Przyjêto macierz do obliczenia");
+					Obliczenia obliczenia = new Obliczenia();
+					ResultDto result = obliczenia.processInput(macierze);
+					long startTime = System.currentTimeMillis();
+					int sizeOfResult = Obliczenia.sizeOf(result);
+					logger.info("Trwa wysy³anie obliczeñ ("
+							+ sizeOfResult
+							+ " bytes)"
+							+ " ("
+							+ Obliczenia.humanReadableByteCount(sizeOfResult,
+									false) + ")");
+					oos.writeObject(result);
+					oos.flush();
+					long duration = System.currentTimeMillis() - startTime;
+					long speed = (long) ((long) sizeOfResult / (duration / 1000d));
+					logger.info("Write speed: "
+							+ Obliczenia.humanReadableByteCount(speed, false)
+							+ "/s");
+//				} else {
+//					ois.close();
+//					bufferedIn.close();
+//					inputStream.close();
+				}
+			}
 		}
+
 	}
-	
+
 	public static void main(String[] args) {
 		new Cluster(4444);
 	}

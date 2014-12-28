@@ -153,9 +153,12 @@ public class Obliczenia {
 		ResultDto result = new ResultDto();
 		int liczbaKolumn = macierze.getColumns().length;
 		int liczbaWierszy = macierze.getRows().length;
+		System.out.println("Rozmiar macierzy: "+liczbaKolumn+", "+liczbaWierszy);
 		List<Element> elements = new ArrayList<>(liczbaKolumn*liczbaWierszy);
 		for (int i=0; i<liczbaKolumn; i++) {
+//			System.out.println("kkolumna: "+i);
 			for (int j=0; j<liczbaWierszy; j++) {
+//				System.out.println("wiersz: "+j);
 				Element e = new Element();
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());

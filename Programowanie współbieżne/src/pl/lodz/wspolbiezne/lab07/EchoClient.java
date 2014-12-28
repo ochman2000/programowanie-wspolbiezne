@@ -42,8 +42,7 @@ public class EchoClient {
 
         try (
             Socket echoSocket = new Socket(hostName, portNumber);
-            PrintWriter out =
-                new PrintWriter(echoSocket.getOutputStream(), true);
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(echoSocket.getOutputStream()));
             BufferedReader in =
                 new BufferedReader(
                     new InputStreamReader(echoSocket.getInputStream()));
@@ -53,7 +52,9 @@ public class EchoClient {
         ) {
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
-                out.println(userInput);
+                out.write(userInput);
+                out.newLine();
+                out.flush();
                 System.out.println("echo: " + in.readLine());
             }
         } catch (UnknownHostException e) {

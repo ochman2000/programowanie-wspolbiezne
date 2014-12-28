@@ -1,24 +1,27 @@
 package pl.lodz.wspolbiezne.lab07;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.logging.Logger;
 
 public class Client {
-	
+
 	private final int LICZBA_PROCESORÓW = 1;
 	private final int N = 64;
 	private Logger logger;
 	private long start;
-	
-	//NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
-	//ABY KOMPILATOR PRZYPISA£ INNE ADRESY
+
+	// NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
+	// ABY KOMPILATOR PRZYPISA£ INNE ADRESY
 	double[][] A = new double[N][N];
 	double[][] B = new double[N][N];
 	double[][] C = new double[N][N];
@@ -26,8 +29,8 @@ public class Client {
 	public Client(String hostName, int portNumber) {
 		start = System.currentTimeMillis();
 		logger = Obliczenia.getCustomLogger();
-		logger.info("Connecting to server at port: "+portNumber+" ...");
-		for (int i=0; i<N; i++) {
+		logger.info("Connecting to server at port: " + portNumber + " ...");
+		for (int i = 0; i < N; i++) {
 			A[i] = new Random().doubles(N).toArray();
 			B[i] = new Random().doubles(N).toArray();
 			C[i] = new Random().doubles(N).toArray();
@@ -35,83 +38,112 @@ public class Client {
 		try {
 			Socket kkSocket = new Socket(hostName, portNumber);
 			int receiveBufferSize = kkSocket.getReceiveBufferSize();
-			logger.info("Rozmiar bufora: (" + receiveBufferSize + " bytes) ("
-					+Obliczenia.humanReadableByteCount(receiveBufferSize, false)
-					+")");
+			logger.info("Rozmiar bufora: ("
+					+ receiveBufferSize
+					+ " bytes) ("
+					+ Obliczenia.humanReadableByteCount(receiveBufferSize,
+							false) + ")");
 			dispatch(kkSocket);
 			logger.info("Zakoñczono obliczanie.");
-			System.out.println("Ca³kowity czas wykonania: "+
-					(int)((System.currentTimeMillis()-start)/1000)+" sekund.");
+			System.out.println("Ca³kowity czas wykonania: "
+					+ (int) ((System.currentTimeMillis() - start) / 1000)
+					+ " sekund.");
 		} catch (UnknownHostException e) {
 			logger.severe("Don't know about host " + hostName);
 			System.exit(1);
+		} catch (StreamCorruptedException e) {
+			logger.severe("This constructor will block until the corresponding"
+					+ " ObjectOutputStream has written and flushed the header.");
+			logger.severe(e.getMessage());
+			System.exit(1);
 		} catch (IOException e) {
-			logger.severe("Couldn't get I/O for the connection to "
-					+ hostName);
+			logger.severe("Couldn't get I/O for the connection to " + hostName);
+			logger.severe(e.getMessage());
 			System.exit(1);
 		} catch (ClassNotFoundException e) {
 			logger.severe("le skastowany typ int[][][] / double[][][]");
 			System.exit(1);
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
-	private void dispatch(Socket kkSocket) throws IOException, ClassNotFoundException {
-		OutputStream outputStream = kkSocket.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(outputStream); 
-		
-		InputStream inputStream = kkSocket.getInputStream();
-		ObjectInputStream ois = new ObjectInputStream(inputStream);
-		
+	private void dispatch(Socket kkSocket) throws IOException,
+			ClassNotFoundException {
+
 		logger.info("Trwa mno¿enie macierzy AxB");
 		Obliczenia obliczenia = new Obliczenia(A, B);
-		double[][] AB = multiply(oos, ois, obliczenia);
-		
+		double[][] AB = multiply(kkSocket, obliczenia);
+
 		logger.info("Trwa mno¿enie macierzy ABxC");
 		obliczenia = new Obliczenia(AB, C);
-		double[][] ABC = multiply(oos, ois, obliczenia);
-		
-		if (N<=8) {
+		double[][] ABC = multiply(kkSocket, obliczenia);
+
+		if (N <= 8) {
 			System.out.println(Obliczenia.toString(ABC));
 		}
 	}
 
-	private double[][] multiply(ObjectOutputStream oos, ObjectInputStream ois,
-			Obliczenia obliczenia) throws IOException, ClassNotFoundException {
+	private double[][] multiply(Socket kkSocket, Obliczenia obliczenia)
+			throws IOException, ClassNotFoundException {
+
+		OutputStream outputStream = kkSocket.getOutputStream();
+		BufferedOutputStream bufferedOut = new BufferedOutputStream(
+				outputStream);
+		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
+		oos.flush();
+
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
 			int end = getEndOfInterval(proces, LICZBA_PROCESORÓW);
 			MacierzeDto C = obliczenia.getBlock(start, end);
-			Logger.getGlobal().info("Trwa wysy³ka bloku nr "+proces);
+			Logger.getGlobal().info("Trwa wysy³ka bloku nr " + proces);
 			long startTime = System.currentTimeMillis();
-			
-			oos.writeObject(C);
+
+			Object[] c = new Object[1];
+			oos.writeObject(c);
+			oos.flush();
 			int sizeOfC = Obliczenia.sizeOf(C);
-			long duration = System.currentTimeMillis()-startTime;
-			logger.info("Zakoñczono przesy³anie bloku nr "+proces+" ("
-							+Obliczenia.humanReadableByteCount(sizeOfC, false)+")");
-			long speed = (long) (sizeOfC/(duration/1000000d));
-			logger.info("Write speed: " + Obliczenia.humanReadableByteCount(speed, false)+"/s");
+			long duration = System.currentTimeMillis() - startTime;
+			logger.info("Zakoñczono przesy³anie bloku nr " + proces + " ("
+					+ Obliczenia.humanReadableByteCount(sizeOfC, false) + ")");
+			long speed = (long) (sizeOfC / (duration / 1000000d));
+			logger.info("Write speed: "
+					+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
 		}
-		
-		//tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
+
+		// tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
 		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
+
+		InputStream inputStream = kkSocket.getInputStream();
+
 		ResultDto macierze;
 		double[][] AB = new double[N][N];
-		int i=LICZBA_PROCESORÓW;
+		int i = LICZBA_PROCESORÓW;
 		int size;
-//		while ((size = ois.available())>0){
-		while ((macierze = (ResultDto) ois.readObject()) != null) {
-			size = Obliczenia.sizeOf(macierze);
-			logger.info("Trwa odbieranie "+Obliczenia.humanReadableByteCount(size, false));
-//			long startTime = System.currentTimeMillis();
-//			macierze = (ResultDto) ois.readObject();
-//			long duration = System.currentTimeMillis()-startTime;
-//			logger.info("Read speed: " + (size/(duration/1000000d))+" kB/s");
-			obliczenia.merge(macierze, AB);
-			if (--i==0) break;
+		while (true) {
+			if (inputStream.available() != 0) {
+				logger.info("Stream available");
+				BufferedInputStream bufferedIn = new BufferedInputStream(
+						inputStream);
+				ObjectInputStream ois = new ObjectInputStream(bufferedIn);
+
+				if ((macierze = (ResultDto) ois.readObject()) != null) {
+					size = Obliczenia.sizeOf(macierze);
+					logger.info("Trwa odbieranie "
+							+ Obliczenia.humanReadableByteCount(size, false));
+					// long startTime = System.currentTimeMillis();
+					// macierze = (ResultDto) ois.readObject();
+					// long duration = System.currentTimeMillis()-startTime;
+					// logger.info("Read speed: " +
+					// (size/(duration/1000000d))+" kB/s");
+					obliczenia.merge(macierze, AB);
+					if (--i == 0)
+						break;
+				}
+			}
 		}
 		return AB;
+
 	}
 
 	public int getBeginningOfInterval(int interval, int totalIntervals) {
@@ -123,7 +155,7 @@ public class Client {
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) (fraction * N);
 	}
-	
+
 	public int getEndOfInterval(int interval, int totalIntervals) {
 		if (totalIntervals <= interval) {
 			throw new IllegalArgumentException(
@@ -134,7 +166,7 @@ public class Client {
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) ((fraction * N) + rozmiarPrzedzialu);
 	}
-	
+
 	public static void main(String[] args) {
 		new Client("localhost", 4444);
 	}

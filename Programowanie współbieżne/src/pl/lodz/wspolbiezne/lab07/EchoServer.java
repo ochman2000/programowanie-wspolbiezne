@@ -42,14 +42,16 @@ public class EchoServer {
             ServerSocket serverSocket =
                 new ServerSocket(portNumber);
             Socket clientSocket = serverSocket.accept();     
-            PrintWriter out =
-                new PrintWriter(clientSocket.getOutputStream(), true);                   
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
+//            PrintWriter out =
+//                new PrintWriter(clientSocket.getOutputStream(), true);
+        	BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         ) {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                out.println(inputLine);
+                out.write(inputLine);
+                out.newLine();
+                out.flush();
             }
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
