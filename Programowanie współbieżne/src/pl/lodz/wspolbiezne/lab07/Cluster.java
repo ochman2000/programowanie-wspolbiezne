@@ -48,16 +48,18 @@ public class Cluster {
 		oos.flush();
 
 		InputStream inputStream = kkSocket.getInputStream();
+		BufferedInputStream bufferedIn = new BufferedInputStream(
+				inputStream);
+		ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
 		System.out.println("Trwa nas³uchiwanie...");
 		MacierzeDto macierze;
+		Object[] o;
 		while (true) {
 			if (inputStream.available() != 0) {
-				BufferedInputStream bufferedIn = new BufferedInputStream(
-						inputStream);
-				ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
-				if ((macierze = (MacierzeDto) ois.readObject()) != null) {
+				if ((o = (Object[]) ois.readObject()) != null) {
+					macierze = (MacierzeDto) o[0];
 					logger.info("Przyjêto macierz do obliczenia");
 					Obliczenia obliczenia = new Obliczenia();
 					ResultDto result = obliczenia.processInput(macierze);
@@ -69,21 +71,20 @@ public class Cluster {
 							+ " ("
 							+ Obliczenia.humanReadableByteCount(sizeOfResult,
 									false) + ")");
-					oos.writeObject(result);
+					o = new Object[] {result};
+					oos.writeObject(o);
 					oos.flush();
 					long duration = System.currentTimeMillis() - startTime;
 					long speed = (long) ((long) sizeOfResult / (duration / 1000d));
 					logger.info("Write speed: "
 							+ Obliczenia.humanReadableByteCount(speed, false)
 							+ "/s");
-//				} else {
-//					ois.close();
-//					bufferedIn.close();
-//					inputStream.close();
 				}
 			}
+			if (inputStream.available()==-1) {
+				logger.severe("connection closed");
+			}
 		}
-
 	}
 
 	public static void main(String[] args) {

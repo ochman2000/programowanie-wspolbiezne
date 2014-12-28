@@ -16,15 +16,17 @@ import java.util.logging.Logger;
 public class Client {
 
 	private final int LICZBA_PROCESORÓW = 1;
-	private final int N = 64;
+	private final int N = 1024;
 	private Logger logger;
 	private long start;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
 
 	// NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
 	// ABY KOMPILATOR PRZYPISA£ INNE ADRESY
-	double[][] A = new double[N][N];
-	double[][] B = new double[N][N];
-	double[][] C = new double[N][N];
+	private double[][] A = new double[N][N];
+	private double[][] B = new double[N][N];
+	private double[][] C = new double[N][N];
 
 	public Client(String hostName, int portNumber) {
 		start = System.currentTimeMillis();
@@ -69,27 +71,39 @@ public class Client {
 	@SuppressWarnings("unused")
 	private void dispatch(Socket kkSocket) throws IOException,
 			ClassNotFoundException {
+		
+		InputStream inputStream = kkSocket.getInputStream();
+		BufferedInputStream bufferedIn = new BufferedInputStream(
+				inputStream);
+		
+		OutputStream outputStream = kkSocket.getOutputStream();
+		BufferedOutputStream bufferedOut = new BufferedOutputStream(
+				outputStream);
+		
 
 		logger.info("Trwa mno¿enie macierzy AxB");
 		Obliczenia obliczenia = new Obliczenia(A, B);
-		double[][] AB = multiply(kkSocket, obliczenia);
+		double[][] AB = multiply(bufferedIn, bufferedOut, obliczenia);
 
 		logger.info("Trwa mno¿enie macierzy ABxC");
 		obliczenia = new Obliczenia(AB, C);
-		double[][] ABC = multiply(kkSocket, obliczenia);
+		double[][] ABC = multiply(bufferedIn, bufferedOut, obliczenia);
 
+		ois.close();
+		oos.close();
+		kkSocket.close();
+		
 		if (N <= 8) {
 			System.out.println(Obliczenia.toString(ABC));
 		}
 	}
 
-	private double[][] multiply(Socket kkSocket, Obliczenia obliczenia)
+	private double[][] multiply(BufferedInputStream bis, BufferedOutputStream bos, Obliczenia obliczenia)
 			throws IOException, ClassNotFoundException {
 
-		OutputStream outputStream = kkSocket.getOutputStream();
-		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream);
-		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
+		if (oos==null) {
+			oos = new ObjectOutputStream(bos);
+		}
 		oos.flush();
 
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
@@ -99,9 +113,10 @@ public class Client {
 			Logger.getGlobal().info("Trwa wysy³ka bloku nr " + proces);
 			long startTime = System.currentTimeMillis();
 
-			Object[] c = new Object[1];
+			Object[] c = new Object[] {C};
 			oos.writeObject(c);
 			oos.flush();
+			
 			int sizeOfC = Obliczenia.sizeOf(C);
 			long duration = System.currentTimeMillis() - startTime;
 			logger.info("Zakoñczono przesy³anie bloku nr " + proces + " ("
@@ -113,21 +128,21 @@ public class Client {
 
 		// tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
 		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
-
-		InputStream inputStream = kkSocket.getInputStream();
-
+		if (ois==null) {
+			ois = new ObjectInputStream(bis);
+		}
+		
 		ResultDto macierze;
+		Object[] o;
 		double[][] AB = new double[N][N];
 		int i = LICZBA_PROCESORÓW;
 		int size;
 		while (true) {
-			if (inputStream.available() != 0) {
+			if (bis.available() != 0) {
 				logger.info("Stream available");
-				BufferedInputStream bufferedIn = new BufferedInputStream(
-						inputStream);
-				ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
-				if ((macierze = (ResultDto) ois.readObject()) != null) {
+				if ((o = (Object[]) ois.readObject()) != null) {
+					macierze = (ResultDto) o[0];
 					size = Obliczenia.sizeOf(macierze);
 					logger.info("Trwa odbieranie "
 							+ Obliczenia.humanReadableByteCount(size, false));

@@ -16,6 +16,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Obliczenia {
+	private Logger logger = getCustomLogger();
 
 	private int N;
 	private double[][] A,B;
@@ -153,12 +154,16 @@ public class Obliczenia {
 		ResultDto result = new ResultDto();
 		int liczbaKolumn = macierze.getColumns().length;
 		int liczbaWierszy = macierze.getRows().length;
-		System.out.println("Rozmiar macierzy: "+liczbaKolumn+", "+liczbaWierszy);
 		List<Element> elements = new ArrayList<>(liczbaKolumn*liczbaWierszy);
+		int x = 0;
 		for (int i=0; i<liczbaKolumn; i++) {
-//			System.out.println("kkolumna: "+i);
+			if ((double)i%((double)liczbaKolumn/10.0)<1.0){
+				if (x!=i*100/liczbaKolumn){
+					x = i*100/liczbaKolumn;
+					logger.info(x+"%");
+				}
+			}
 			for (int j=0; j<liczbaWierszy; j++) {
-//				System.out.println("wiersz: "+j);
 				Element e = new Element();
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());
