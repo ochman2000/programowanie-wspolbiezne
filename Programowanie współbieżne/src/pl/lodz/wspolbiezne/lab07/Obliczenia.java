@@ -16,7 +16,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Obliczenia {
-	private Logger logger = getCustomLogger();
+	private Logger logger = Logger.getGlobal();
 
 	private int N;
 	private double[][] A,B;
@@ -158,7 +158,7 @@ public class Obliczenia {
 		int x = 0;
 		for (int i=0; i<liczbaKolumn; i++) {
 			if ((double)i%((double)liczbaKolumn/10.0)<1.0){
-				if (x!=i*100/liczbaKolumn){
+				if (x!=i*100/liczbaKolumn) {
 					x = i*100/liczbaKolumn;
 					logger.info(x+"%");
 				}

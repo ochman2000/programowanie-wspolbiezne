@@ -74,11 +74,11 @@ public class Client {
 		
 		InputStream inputStream = kkSocket.getInputStream();
 		BufferedInputStream bufferedIn = new BufferedInputStream(
-				inputStream);
+				inputStream, kkSocket.getReceiveBufferSize());
 		
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream);
+				outputStream, kkSocket.getSendBufferSize());
 		
 
 		logger.info("Trwa mno¿enie macierzy AxB");
@@ -121,13 +121,11 @@ public class Client {
 			long duration = System.currentTimeMillis() - startTime;
 			logger.info("Zakoñczono przesy³anie bloku nr " + proces + " ("
 					+ Obliczenia.humanReadableByteCount(sizeOfC, false) + ")");
-			long speed = (long) (sizeOfC / (duration / 1000000d));
+			long speed = (long) (sizeOfC / (duration / 1000d));
 			logger.info("Write speed: "
 					+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
 		}
 
-		// tutaj dodaj wyniki, które przyjd¹ z powrotem z serwera.
-		// Pamiêtaj, ¿eby przy zliczaniu wzi¹æ pod uwagê indeksy kolumn.
 		if (ois==null) {
 			ois = new ObjectInputStream(bis);
 		}
@@ -146,11 +144,11 @@ public class Client {
 					size = Obliczenia.sizeOf(macierze);
 					logger.info("Trwa odbieranie "
 							+ Obliczenia.humanReadableByteCount(size, false));
-					// long startTime = System.currentTimeMillis();
-					// macierze = (ResultDto) ois.readObject();
-					// long duration = System.currentTimeMillis()-startTime;
-					// logger.info("Read speed: " +
-					// (size/(duration/1000000d))+" kB/s");
+					 long startTime = System.currentTimeMillis();
+					 long duration = System.currentTimeMillis()-startTime;
+					 long speed = (long) (size / (duration / 1000d));
+						logger.info("Read speed: "
+								+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
 					obliczenia.merge(macierze, AB);
 					if (--i == 0)
 						break;

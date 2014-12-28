@@ -23,6 +23,7 @@ public class Cluster {
 
 			processInput(clientSocket);
 			serverSocket.close();
+			logger.info("Connection closed");
 
 		} catch (IOException e) {
 			logger.severe("Exception caught when trying to listen on port "
@@ -43,21 +44,27 @@ public class Cluster {
 				+ ")");
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream);
+				outputStream, kkSocket.getSendBufferSize());
 		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
 		oos.flush();
 
 		InputStream inputStream = kkSocket.getInputStream();
 		BufferedInputStream bufferedIn = new BufferedInputStream(
-				inputStream);
+				inputStream, kkSocket.getReceiveBufferSize());
 		ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
-		System.out.println("Trwa nas³uchiwanie...");
+		if (inputStream.markSupported()) {
+			logger.info("mark supported");
+		} else {
+			logger.severe("mark not supported");
+		}
+		
 		MacierzeDto macierze;
 		Object[] o;
+		long waittime = System.currentTimeMillis();
 		while (true) {
 			if (inputStream.available() != 0) {
-
+				waittime = System.currentTimeMillis();
 				if ((o = (Object[]) ois.readObject()) != null) {
 					macierze = (MacierzeDto) o[0];
 					logger.info("Przyjêto macierz do obliczenia");
@@ -81,8 +88,11 @@ public class Cluster {
 							+ "/s");
 				}
 			}
-			if (inputStream.available()==-1) {
-				logger.severe("connection closed");
+			if (System.currentTimeMillis()-waittime>60_000) {
+				ois.close();
+				oos.close();
+				kkSocket.close();
+				break;
 			}
 		}
 	}
