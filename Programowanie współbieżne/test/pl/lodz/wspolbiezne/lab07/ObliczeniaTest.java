@@ -310,7 +310,7 @@ public class ObliczeniaTest {
 	
 	@Test
 	public void test10() {
-		int LICZBA_PROCESORÓW=4;
+		int LICZBA_PROCESORÓW=1;
 		int N = 1024;
 		
 		//NIESTETY JAVA NIE JEST TAKA SPRYTNA I MUSZÊ POWTÓRZYÆ TO TRZY RAZY,
