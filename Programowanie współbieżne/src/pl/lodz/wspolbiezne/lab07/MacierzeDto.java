@@ -55,7 +55,7 @@ class Zbiór implements Serializable {
 		return values;
 	}
 
-	public Double getValue(int index) {
+	public double getValue(int index) {
 		return values[index];
 	}
 

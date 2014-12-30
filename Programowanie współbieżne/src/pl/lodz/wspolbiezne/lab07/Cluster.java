@@ -65,7 +65,7 @@ public class Cluster {
 		while (true) {
 			if (inputStream.available() != 0) {
 				waittime = System.currentTimeMillis();
-				if ((o = (Object[]) ois.readObject()) != null) {
+				if ((o = (Object[]) ois.readUnshared()) != null) {
 					macierze = (MacierzeDto) o[0];
 					logger.info("Przyjêto macierz do obliczenia");
 					Obliczenia obliczenia = new Obliczenia();

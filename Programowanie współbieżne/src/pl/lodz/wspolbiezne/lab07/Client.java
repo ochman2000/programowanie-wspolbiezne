@@ -139,7 +139,7 @@ public class Client {
 			if (bis.available() != 0) {
 				logger.info("Stream available");
 
-				if ((o = (Object[]) ois.readObject()) != null) {
+				if ((o = (Object[]) ois.readUnshared()) != null) {
 					macierze = (ResultDto) o[0];
 					size = Obliczenia.sizeOf(macierze);
 					logger.info("Trwa odbieranie "
