@@ -44,12 +44,13 @@ public class Cluster {
 				+ ")");
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream);
+				outputStream, kkSocket.getSendBufferSize());
 		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
 		// oos.flush();
 
 		InputStream inputStream = kkSocket.getInputStream();
-		BufferedInputStream bufferedIn = new BufferedInputStream(inputStream);
+		BufferedInputStream bufferedIn = new BufferedInputStream(inputStream,
+				kkSocket.getReceiveBufferSize());
 		ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
 		if (inputStream.markSupported()) {
@@ -106,7 +107,7 @@ public class Cluster {
 				ois.close();
 				oos.close();
 				kkSocket.close();
-				logger.info("Nast¹pi³ timeout: " + timeout/1000 + "s");
+				logger.info("Nast¹pi³ timeout: " + timeout / 1000 + "s");
 				break;
 			}
 		}

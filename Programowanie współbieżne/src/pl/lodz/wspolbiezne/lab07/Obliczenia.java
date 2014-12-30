@@ -212,7 +212,7 @@ public class Obliczenia {
 			return bytes + " B";
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
-				+ (si ? "" : "i");
+				+ (si ? "" : "");
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 

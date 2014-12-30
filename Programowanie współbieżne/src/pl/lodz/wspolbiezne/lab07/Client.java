@@ -73,11 +73,12 @@ public class Client {
 			ClassNotFoundException {
 
 		InputStream inputStream = kkSocket.getInputStream();
-		BufferedInputStream bufferedIn = new BufferedInputStream(inputStream);
+		BufferedInputStream bufferedIn = new BufferedInputStream(inputStream,
+				kkSocket.getReceiveBufferSize());
 
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream);
+				outputStream, kkSocket.getSendBufferSize());
 
 		logger.info("Trwa mno¿enie macierzy AxB");
 		Obliczenia obliczenia = new Obliczenia(A, B);
