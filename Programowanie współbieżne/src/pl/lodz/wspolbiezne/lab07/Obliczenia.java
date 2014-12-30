@@ -229,4 +229,14 @@ public class Obliczenia {
 		ObjectInputStream is = new ObjectInputStream(in);
 		return is.readObject();
 	}
+
+	public ResultDto processInput(byte[] o) {
+		MacierzeDto dto = null;
+		try {
+			dto = (MacierzeDto) deserialize(o);
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		return processInput(dto);
+	}
 }

@@ -104,7 +104,6 @@ public class Client {
 		if (oos == null) {
 			oos = new ObjectOutputStream(bos);
 		}
-		// oos.flush();
 
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
