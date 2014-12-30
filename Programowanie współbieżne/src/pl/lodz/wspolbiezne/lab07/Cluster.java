@@ -71,7 +71,7 @@ public class Cluster {
 							+ Obliczenia.humanReadableByteCount(size2, false));
 					long duration2 = System.currentTimeMillis() - startTime2;
 					long speed2 = (long) (size2 / (duration2 / 1000d));
-					logger.info("Read speed: " + size2 + "bytes in "
+					logger.info("Read speed: " + size2 + " bytes in "
 							+ duration2 + "ms");
 					logger.info("Read speed: "
 							+ Obliczenia.humanReadableByteCount(speed2, false)
@@ -94,7 +94,7 @@ public class Cluster {
 					oos.flush();
 					long duration = System.currentTimeMillis() - startTime;
 					long speed = (long) ((long) sizeOfResult / (duration / 1000d));
-					logger.info("Write speed: " + sizeOfResult + "bytes in "
+					logger.info("Write speed: " + sizeOfResult + " bytes in "
 							+ duration + "ms");
 					logger.info("Write speed: "
 							+ Obliczenia.humanReadableByteCount(speed, false)
@@ -106,7 +106,7 @@ public class Cluster {
 				ois.close();
 				oos.close();
 				kkSocket.close();
-				logger.info("Nast¹pi³ timeout: " + timeout + "ms");
+				logger.info("Nast¹pi³ timeout: " + timeout/1000 + "s");
 				break;
 			}
 		}

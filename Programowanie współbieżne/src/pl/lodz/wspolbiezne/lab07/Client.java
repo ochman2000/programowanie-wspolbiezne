@@ -120,7 +120,7 @@ public class Client {
 			logger.info("Zakoñczono przesy³anie bloku nr " + proces + " ("
 					+ Obliczenia.humanReadableByteCount(sizeOfC, false) + ")");
 			long speed = (long) (sizeOfC / (duration / 1000d));
-			logger.info("Write speed: " + sizeOfC + "bytes in " + duration
+			logger.info("Write speed: " + sizeOfC + " bytes in " + duration
 					+ "ms");
 			logger.info("Write speed: "
 					+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
@@ -144,7 +144,7 @@ public class Client {
 							+ Obliczenia.humanReadableByteCount(size, false));
 					long duration = System.currentTimeMillis() - startTime;
 					long speed = (long) (size / (duration / 1000d));
-					logger.info("Read speed: " + size + "bytes in " + duration
+					logger.info("Read speed: " + size + " bytes in " + duration
 							+ "ms");
 					logger.info("Read speed: "
 							+ Obliczenia.humanReadableByteCount(speed, false)
