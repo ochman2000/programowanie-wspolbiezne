@@ -44,13 +44,13 @@ public class Cluster {
 				+ ")");
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream, kkSocket.getSendBufferSize());
+				outputStream);
 		ObjectOutputStream oos = new ObjectOutputStream(bufferedOut);
-		oos.flush();
+//		oos.flush();
 
 		InputStream inputStream = kkSocket.getInputStream();
 		BufferedInputStream bufferedIn = new BufferedInputStream(
-				inputStream, kkSocket.getReceiveBufferSize());
+				inputStream);
 		ObjectInputStream ois = new ObjectInputStream(bufferedIn);
 
 		if (inputStream.markSupported()) {

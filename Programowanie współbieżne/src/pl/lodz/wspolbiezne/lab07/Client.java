@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 
 public class Client {
 
-	private final int LICZBA_PROCESORÓW = 1;
-	private final int N = 1024;
+	private final int LICZBA_PROCESORÓW = 4;
+	private final int N = 256;
 	private Logger logger;
 	private long start;
 	private ObjectInputStream ois;
@@ -74,11 +74,11 @@ public class Client {
 		
 		InputStream inputStream = kkSocket.getInputStream();
 		BufferedInputStream bufferedIn = new BufferedInputStream(
-				inputStream, kkSocket.getReceiveBufferSize());
+				inputStream);
 		
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
-				outputStream, kkSocket.getSendBufferSize());
+				outputStream);
 		
 
 		logger.info("Trwa mno¿enie macierzy AxB");
@@ -104,7 +104,7 @@ public class Client {
 		if (oos==null) {
 			oos = new ObjectOutputStream(bos);
 		}
-		oos.flush();
+//		oos.flush();
 
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
