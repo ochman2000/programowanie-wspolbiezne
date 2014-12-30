@@ -21,45 +21,43 @@ public class Obliczenia {
 	private Logger logger = Logger.getGlobal();
 
 	private int N;
-	private double[][] A,B;
+	private double[][] A, B;
 
 	public Obliczenia(double[][] A, double[][] B) {
-		if (!(A.length == A[0].length 
-				&& A[0].length == B.length 
-				&& B.length == B[0].length)) {
+		if (!(A.length == A[0].length && A[0].length == B.length && B.length == B[0].length)) {
 			throw new RuntimeException("Rozmiar macierzy ma byæ taki sam.");
 		}
 		N = A.length;
 		this.A = A;
 		this.B = B;
 	}
-	
+
 	public Obliczenia() {
-		
+
 	}
-	
+
 	public MacierzeDto getBlock(int start, int end) {
 		MacierzeDto D = new MacierzeDto();
-		
+
 		int l = end - start;
 		List<Zbiór> rows = new ArrayList<>(N);
 		List<Zbiór> columns = new ArrayList<>(l);
-		
-		for (int j=0; j<l; j++) {
+
+		for (int j = 0; j < l; j++) {
 			Zbiór z1 = new Zbiór();
-			z1.setIndex(start+j);
+			z1.setIndex(start + j);
 			List<Double> values1 = new ArrayList<>(N);
-			for (int i=0; i<N; i++) {
-				values1.add(B[start+j][i]);
+			for (int i = 0; i < N; i++) {
+				values1.add(B[start + j][i]);
 			}
 			z1.setValues(values1);
 			rows.add(z1);
 		}
-		for (int j=0; j<N; j++) {
+		for (int j = 0; j < N; j++) {
 			Zbiór z2 = new Zbiór();
 			z2.setIndex(j);
 			double[] values2 = new double[N];
-			for (int i=0; i<N; i++) {
+			for (int i = 0; i < N; i++) {
 				values2[i] = (A[i][j]);
 			}
 			z2.setValues(values2);
@@ -77,7 +75,7 @@ public class Obliczenia {
 		}
 		return sum;
 	}
-	
+
 	public static String toString(double[][] c) {
 		if (c == null)
 			return "null";
@@ -95,7 +93,7 @@ public class Obliczenia {
 			b.append(",\n");
 		}
 	}
-	
+
 	public static String arrayToString(int[][] c) {
 		if (c == null)
 			return "null";
@@ -151,29 +149,29 @@ public class Obliczenia {
 		}
 		return C;
 	}
-	
+
 	public ResultDto processInput(MacierzeDto macierze) {
 		ResultDto result = new ResultDto();
 		int liczbaKolumn = macierze.getColumns().length;
 		int liczbaWierszy = macierze.getRows().length;
-		List<Element> elements = new ArrayList<>(liczbaKolumn*liczbaWierszy);
+		List<Element> elements = new ArrayList<>(liczbaKolumn * liczbaWierszy);
 		int x = 0;
-		for (int i=0; i<liczbaKolumn; i++) {
-			if ((double)i%((double)liczbaKolumn/10.0)<1.0){
-				if (x!=i*100/liczbaKolumn) {
-					x = i*100/liczbaKolumn;
-					logger.info(x+"%");
+		for (int i = 0; i < liczbaKolumn; i++) {
+			if ((double) i % ((double) liczbaKolumn / 10.0) < 1.0) {
+				if (x != i * 100 / liczbaKolumn) {
+					x = i * 100 / liczbaKolumn;
+					logger.info(x + "%");
 				}
 			}
-			for (int j=0; j<liczbaWierszy; j++) {
+			for (int j = 0; j < liczbaWierszy; j++) {
 				Element e = new Element();
 				e.setKolumna(macierze.getColumn(i).getIndex());
 				e.setWiersz(macierze.getRow(j).getIndex());
 				double v = 0;
 				int size = macierze.getColumn(i).getValues().length;
-				for (int m=0; m<size; m++) {
+				for (int m = 0; m < size; m++) {
 					v += macierze.getColumn(i).getValue(m)
-						*macierze.getRow(j).getValue(m);
+							* macierze.getRow(j).getValue(m);
 				}
 				e.setWartoœæ(v);
 				elements.add(e);
@@ -188,34 +186,35 @@ public class Obliczenia {
 			ab[e.getKolumna()][e.getWiersz()] = e.getWartoœæ();
 		}
 	}
-	
+
 	public void merge(ResultDto result, double[][] ab) {
 		for (Element e : result.getElements()) {
 			ab[e.getWiersz()][e.getKolumna()] = e.getWartoœæ();
 		}
 	}
-	
+
 	public static int sizeOf(Object obj) throws IOException {
 
-	    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-	    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+				byteOutputStream);
 
-	    objectOutputStream.writeObject(obj);
-	    objectOutputStream.flush();
-	    objectOutputStream.close();
+		objectOutputStream.writeObject(obj);
+		objectOutputStream.flush();
+		objectOutputStream.close();
 
-	    return byteOutputStream.toByteArray().length;
+		return byteOutputStream.toByteArray().length;
 	}
-	
+
 	public static String humanReadableByteCount(long bytes, boolean si) {
-	    int unit = si ? 1000 : 1024;
-	    if (bytes < unit) return bytes + " B";
-	    int exp = (int) (Math.log(bytes) / Math.log(unit));
-	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
-	    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit)
+			return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
+				+ (si ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
-	
-
 
 	public static byte[] serialize(Object obj) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

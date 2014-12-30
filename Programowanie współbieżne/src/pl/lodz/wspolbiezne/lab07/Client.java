@@ -71,15 +71,13 @@ public class Client {
 	@SuppressWarnings("unused")
 	private void dispatch(Socket kkSocket) throws IOException,
 			ClassNotFoundException {
-		
+
 		InputStream inputStream = kkSocket.getInputStream();
-		BufferedInputStream bufferedIn = new BufferedInputStream(
-				inputStream);
-		
+		BufferedInputStream bufferedIn = new BufferedInputStream(inputStream);
+
 		OutputStream outputStream = kkSocket.getOutputStream();
 		BufferedOutputStream bufferedOut = new BufferedOutputStream(
 				outputStream);
-		
 
 		logger.info("Trwa mno¿enie macierzy AxB");
 		Obliczenia obliczenia = new Obliczenia(A, B);
@@ -92,19 +90,20 @@ public class Client {
 		ois.close();
 		oos.close();
 		kkSocket.close();
-		
+
 		if (N <= 8) {
 			System.out.println(Obliczenia.toString(ABC));
 		}
 	}
 
-	private double[][] multiply(BufferedInputStream bis, BufferedOutputStream bos, Obliczenia obliczenia)
+	private double[][] multiply(BufferedInputStream bis,
+			BufferedOutputStream bos, Obliczenia obliczenia)
 			throws IOException, ClassNotFoundException {
 
-		if (oos==null) {
+		if (oos == null) {
 			oos = new ObjectOutputStream(bos);
 		}
-//		oos.flush();
+		// oos.flush();
 
 		for (int proces = 0; proces < LICZBA_PROCESORÓW; proces++) {
 			int start = getBeginningOfInterval(proces, LICZBA_PROCESORÓW);
@@ -115,20 +114,22 @@ public class Client {
 
 			oos.writeObject(C);
 			oos.flush();
-			
+
 			int sizeOfC = Obliczenia.sizeOf(C);
 			long duration = System.currentTimeMillis() - startTime;
 			logger.info("Zakoñczono przesy³anie bloku nr " + proces + " ("
 					+ Obliczenia.humanReadableByteCount(sizeOfC, false) + ")");
 			long speed = (long) (sizeOfC / (duration / 1000d));
+			logger.info("Write speed: " + sizeOfC + "bytes in " + duration
+					+ "ms");
 			logger.info("Write speed: "
 					+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
 		}
 
-		if (ois==null) {
+		if (ois == null) {
 			ois = new ObjectInputStream(bis);
 		}
-		
+
 		ResultDto macierze;
 		double[][] AB = new double[N][N];
 		int i = LICZBA_PROCESORÓW;
@@ -136,16 +137,18 @@ public class Client {
 		while (true) {
 			if (bis.available() != 0) {
 				logger.info("Stream available");
-
+				long startTime = System.currentTimeMillis();
 				if ((macierze = (ResultDto) ois.readUnshared()) != null) {
 					size = Obliczenia.sizeOf(macierze);
 					logger.info("Trwa odbieranie "
 							+ Obliczenia.humanReadableByteCount(size, false));
-					 long startTime = System.currentTimeMillis();
-					 long duration = System.currentTimeMillis()-startTime;
-					 long speed = (long) (size / (duration / 1000d));
-						logger.info("Read speed: "
-								+ Obliczenia.humanReadableByteCount(speed, false) + "/s");
+					long duration = System.currentTimeMillis() - startTime;
+					long speed = (long) (size / (duration / 1000d));
+					logger.info("Read speed: " + size + "bytes in " + duration
+							+ "ms");
+					logger.info("Read speed: "
+							+ Obliczenia.humanReadableByteCount(speed, false)
+							+ "/s");
 					obliczenia.merge(macierze, AB);
 					if (--i == 0)
 						break;
