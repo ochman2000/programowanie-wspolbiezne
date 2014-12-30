@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 
 public class Cluster {
 	Logger logger;
+	
+	public static void main(String[] args) {
+		new Cluster(4444);
+	}
 
 	public Cluster(int portNumber) {
 		logger = Obliczenia.getCustomLogger();
@@ -65,11 +69,7 @@ public class Cluster {
 			if (inputStream.available() != 0) {
 				uptime = System.currentTimeMillis();
 				if ((macierze = (MacierzeDto) ois.readUnshared()) != null) {
-//				byte[] buf = new byte[kkSocket.getReceiveBufferSize()];
-//				ois.readFully(buf); 
-//				macierze = (MacierzeDto) Obliczenia.deserialize(buf); {
 					long size2 = Obliczenia.sizeOf(macierze);
-//					byte[] o = Obliczenia.serialize(macierze);
 					logger.info("Przyjêto macierz do obliczenia");
 					logger.info("Trwa odbieranie "
 							+ Obliczenia.humanReadableByteCount(size2, false));
@@ -114,9 +114,5 @@ public class Cluster {
 				break;
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		new Cluster(4444);
 	}
 }

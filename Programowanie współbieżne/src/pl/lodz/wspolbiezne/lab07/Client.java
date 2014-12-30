@@ -14,6 +14,10 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 public class Client {
+	
+	public static void main(String[] args) {
+		new Client("localhost", 4444);
+	}
 
 	private final int LICZBA_PROCESORÓW = 1;
 	private final int N = 1024;
@@ -178,9 +182,5 @@ public class Client {
 		double rozmiarPrzedzialu = (double) N / (double) totalIntervals;
 		double fraction = (double) interval / (double) totalIntervals;
 		return (int) ((fraction * N) + rozmiarPrzedzialu);
-	}
-
-	public static void main(String[] args) {
-		new Client("localhost", 4444);
 	}
 }
