@@ -60,13 +60,11 @@ public class Cluster {
 		}
 		
 		MacierzeDto macierze;
-		Object[] o;
 		long uptime = System.currentTimeMillis();
 		while (true) {
 			if (inputStream.available() != 0) {
 				uptime = System.currentTimeMillis();
-				if ((o = (Object[]) ois.readUnshared()) != null) {
-					macierze = (MacierzeDto) o[0];
+				if ((macierze = (MacierzeDto) ois.readUnshared()) != null) {
 					logger.info("Przyjêto macierz do obliczenia");
 					Obliczenia obliczenia = new Obliczenia();
 					ResultDto result = obliczenia.processInput(macierze);
@@ -78,8 +76,7 @@ public class Cluster {
 							+ " ("
 							+ Obliczenia.humanReadableByteCount(sizeOfResult,
 									false) + ")");
-					o = new Object[] {result};
-					oos.writeObject(o);
+					oos.writeObject(result);
 					oos.flush();
 					long duration = System.currentTimeMillis() - startTime;
 					long speed = (long) ((long) sizeOfResult / (duration / 1000d));
@@ -88,10 +85,12 @@ public class Cluster {
 							+ "/s");
 				}
 			}
-			if (System.currentTimeMillis()-uptime>10_000) {
+			int timeout = 10_000;
+			if (System.currentTimeMillis()-uptime>timeout) {
 				ois.close();
 				oos.close();
 				kkSocket.close();
+				logger.info("Nast¹pi³ timeout: "+timeout+"ms");
 				break;
 			}
 		}

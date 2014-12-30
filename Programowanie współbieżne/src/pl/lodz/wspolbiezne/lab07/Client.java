@@ -113,8 +113,7 @@ public class Client {
 			Logger.getGlobal().info("Trwa wysy³ka bloku nr " + proces);
 			long startTime = System.currentTimeMillis();
 
-			Object[] c = new Object[] {C};
-			oos.writeObject(c);
+			oos.writeObject(C);
 			oos.flush();
 			
 			int sizeOfC = Obliczenia.sizeOf(C);
@@ -131,7 +130,6 @@ public class Client {
 		}
 		
 		ResultDto macierze;
-		Object[] o;
 		double[][] AB = new double[N][N];
 		int i = LICZBA_PROCESORÓW;
 		int size;
@@ -139,8 +137,7 @@ public class Client {
 			if (bis.available() != 0) {
 				logger.info("Stream available");
 
-				if ((o = (Object[]) ois.readUnshared()) != null) {
-					macierze = (ResultDto) o[0];
+				if ((macierze = (ResultDto) ois.readUnshared()) != null) {
 					size = Obliczenia.sizeOf(macierze);
 					logger.info("Trwa odbieranie "
 							+ Obliczenia.humanReadableByteCount(size, false));
