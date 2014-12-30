@@ -61,10 +61,10 @@ public class Cluster {
 		
 		MacierzeDto macierze;
 		Object[] o;
-		long waittime = System.currentTimeMillis();
+		long uptime = System.currentTimeMillis();
 		while (true) {
 			if (inputStream.available() != 0) {
-				waittime = System.currentTimeMillis();
+				uptime = System.currentTimeMillis();
 				if ((o = (Object[]) ois.readUnshared()) != null) {
 					macierze = (MacierzeDto) o[0];
 					logger.info("Przyjêto macierz do obliczenia");
@@ -88,7 +88,7 @@ public class Cluster {
 							+ "/s");
 				}
 			}
-			if (System.currentTimeMillis()-waittime>60_000) {
+			if (System.currentTimeMillis()-uptime>10_000) {
 				ois.close();
 				oos.close();
 				kkSocket.close();

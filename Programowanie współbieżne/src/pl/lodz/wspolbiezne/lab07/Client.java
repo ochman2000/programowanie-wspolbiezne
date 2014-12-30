@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 
 public class Client {
 
-	private final int LICZBA_PROCESORÓW = 4;
-	private final int N = 256;
+	private final int LICZBA_PROCESORÓW = 1;
+	private final int N = 1024;
 	private Logger logger;
 	private long start;
 	private ObjectInputStream ois;
