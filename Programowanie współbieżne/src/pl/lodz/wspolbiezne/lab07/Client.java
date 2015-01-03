@@ -52,7 +52,7 @@ public class Client {
 			dispatch(kkSocket);
 			logger.info("Zakoñczono obliczanie.");
 			System.out.println("Ca³kowity czas wykonania: "
-					+ (int) ((System.currentTimeMillis() - start) / 1000)
+					+ (double) ((double)(System.currentTimeMillis() - start) / 1000.00)
 					+ " sekund.");
 		} catch (UnknownHostException e) {
 			logger.severe("Don't know about host " + hostName);
