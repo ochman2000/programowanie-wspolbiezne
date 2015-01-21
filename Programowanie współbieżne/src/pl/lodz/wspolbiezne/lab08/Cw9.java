@@ -43,10 +43,10 @@ public class Cw9 {
 
 	public static void main(String[] args) throws InterruptedException {
 		double[][] matrix =
-			{ 	{ 3, 6, 4, 6, 2 },
-				{ 4, 4, 3, 1, 5 },
-				{ 3, 1, (5 / 4d), (5 / 3d), 1 },
-				{ (5 / 3d), (1 / 2d), 9, 5, 3 } };
+			{ 	{4	,-2	,4	,-2	,8	},
+				{3	,1	,4	,2	,7	},
+				{2	,4	,2	,1	,10	},
+				{2	,-2	,4	,2	,2	}};
 		Cw9 cw = new Cw9();
 		cw.setMatrix(matrix);
 		cw.uruchomWatki();
