@@ -1,5 +1,7 @@
 package pl.lodz.wspolbiezne.lab09;
 
+import java.util.logging.Logger;
+
 public class GaussJordan {
 
 	
@@ -8,8 +10,9 @@ public class GaussJordan {
 		// perform Gauss-Jordan Elimination algorithm
 		i = 1;
 		j = 1;
-		n = A.length;
-		m = A[0].length;
+		n = A.length-1;
+		m = A[0].length-1;
+		System.out.println("n="+n+" m="+m);
 		while (i <= n && j <= m) {
 
 			// look for a non-zero entry in col j at or below row i
@@ -23,24 +26,23 @@ public class GaussJordan {
 				// if k is not i, then swap row i with row k
 				if (k != i) {
 					swap(A, i, k, j);
-//					toString(A);
 				}
 
 				// if A[i][j] is not 1, then divide row i by A[i][j]
 				if (A[i][j] != 1) {
 					divide(A, i, j);
-//					toString(A);
 				}
 
 				// eliminate all other non-zero entries from col j by
 				// subtracting from each
 				// row (other than i) an appropriate multiple of row i
 				eliminate(A, i, j);
-//				toString(A);
 				i++;
 			}
+			Logger.getGlobal().info("Iteracja nr \t"+j);
 			j++;
 		}
+//		printMatrix(A);
 	}
 	
 	private static void swap(double[][] A, int i, int k, int j) {
@@ -73,7 +75,7 @@ public class GaussJordan {
 		}
 	}
 
-	private static String toString(double[][] A) {
+	private static String printMatrix(double[][] A) {
 		StringBuilder sb = new StringBuilder();
 		int n = A.length - 1;
 		int m = A[0].length - 1;
@@ -83,6 +85,7 @@ public class GaussJordan {
 			sb.append("\n");
 		}
 		sb.append("\n\n");
+		System.out.println(sb);
 		return sb.toString();
 	}
 }
