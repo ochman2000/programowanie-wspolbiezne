@@ -4,45 +4,36 @@ import java.util.logging.Logger;
 
 public class GaussJordan {
 
-	
+	private static final boolean BOOLEAN = false;
+
 	public GaussJordan(double[][] A) {
 		int n, m, i, j, k;
-		// perform Gauss-Jordan Elimination algorithm
-		i = 1;
-		j = 1;
-		n = A.length-1;
-		m = A[0].length-1;
+		i = 1; j = 1; n = A.length-1; m = A[0].length-1;
+		long starttime = System.currentTimeMillis();
 		System.out.println("n="+n+" m="+m);
+		
 		while (i <= n && j <= m) {
 
-			// look for a non-zero entry in col j at or below row i
 			k = i;
 			while (k <= n && A[k][j] == 0)
 				k++;
 
-			// if such an entry is found at row k
 			if (k <= n) {
-
-				// if k is not i, then swap row i with row k
 				if (k != i) {
 					swap(A, i, k, j);
 				}
-
-				// if A[i][j] is not 1, then divide row i by A[i][j]
 				if (A[i][j] != 1) {
 					divide(A, i, j);
 				}
-
-				// eliminate all other non-zero entries from col j by
-				// subtracting from each
-				// row (other than i) an appropriate multiple of row i
 				eliminate(A, i, j);
 				i++;
 			}
 			Logger.getGlobal().info("Iteracja nr \t"+j);
 			j++;
 		}
-//		printMatrix(A);
+		long endtime = System.currentTimeMillis();
+		Logger.getAnonymousLogger().info("Czas wykonania: "+(double)((endtime-starttime)/1000.0)+" sekundy.");
+		if (BOOLEAN) { printMatrix(A); }
 	}
 	
 	private static void swap(double[][] A, int i, int k, int j) {
