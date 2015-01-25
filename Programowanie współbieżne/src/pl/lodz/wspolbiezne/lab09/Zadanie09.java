@@ -16,6 +16,7 @@ public class Zadanie09 {
 	private static final String SCIEZKA_DO_PLIKU = "resources/macierze/doubles.dat";
 	private static boolean USE_FILE = false;
 	private static int ROZMIAR_MACIERZY = 1024;
+	private static int LICZBA_W¥TKÓW = 4;
 	
 	public static void main(String[] args) {
 		new Zadanie09();

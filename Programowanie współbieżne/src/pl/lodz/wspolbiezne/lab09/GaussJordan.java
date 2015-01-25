@@ -2,6 +2,9 @@ package pl.lodz.wspolbiezne.lab09;
 
 import java.util.logging.Logger;
 
+import pl.lodz.wspolbiezne.lab04.MainThread;
+import pl.lodz.wspolbiezne.lab04.W¹tek;
+
 public class GaussJordan {
 
 	private static final boolean BOOLEAN = false;
@@ -21,20 +24,21 @@ public class GaussJordan {
 			if (k <= n) {
 				if (k != i) {
 					swap(A, i, k, j);
-				}
-				if (A[i][j] != 1) {
-					divide(A, i, j);
-				}
-				eliminate(A, i, j);
+				}			
+				
+				
 				i++;
 			}
 			Logger.getGlobal().info("Iteracja nr \t"+j);
 			j++;
 		}
 		long endtime = System.currentTimeMillis();
-		Logger.getAnonymousLogger().info("Czas wykonania: "+(double)((endtime-starttime)/1000.0)+" sekundy.");
+		Logger.getAnonymousLogger().info("Czas wykonania: "
+				+(double)((endtime-starttime)/1000.0)+" sekundy.");
 		if (BOOLEAN) { printMatrix(A); }
 	}
+
+	
 	
 	private static void swap(double[][] A, int i, int k, int j) {
 		int m = A[0].length - 1;
@@ -43,26 +47,6 @@ public class GaussJordan {
 			temp = A[i][q];
 			A[i][q] = A[k][q];
 			A[k][q] = temp;
-		}
-	}
-
-	private static void divide(double[][] A, int i, int j) {
-		int m = A[0].length - 1;
-		for (int q = j + 1; q <= m; q++)
-			A[i][q] /= A[i][j];
-		A[i][j] = 1;
-	}
-
-	private static void eliminate(double[][] A, int i, int j) {
-		int n = A.length - 1;
-		int m = A[0].length - 1;
-		for (int p = 1; p <= n; p++) {
-			if (p != i && A[p][j] != 0) {
-				for (int q = j + 1; q <= m; q++) {
-					A[p][q] -= A[p][j] * A[i][q];
-				}
-				A[p][j] = 0;
-			}
 		}
 	}
 
@@ -78,5 +62,20 @@ public class GaussJordan {
 		sb.append("\n\n");
 		System.out.println(sb);
 		return sb.toString();
+	}
+	
+	private Thread[] initThreads(int threadsNumber) {
+		if (threadsNumber < 1) {
+			throw new IllegalArgumentException(
+					"Liczb¹ w¹tków musi byæ wiêksza od 0");
+		}
+		Thread[] thread = new Thread[threadsNumber];
+		for (int interval = 0; interval < threadsNumber; interval++) {
+			int pocz¹tek = MainThread.getBeginningOfInterval(interval, threadsNumber);
+			int koniec = MainThread.getEndOfInterval(interval, threadsNumber);
+			W¹tek w = new W¹tek(A, pocz¹tek, koniec, i);
+			thread[interval] = new Thread(w);
+		}
+		return thread;
 	}
 }
