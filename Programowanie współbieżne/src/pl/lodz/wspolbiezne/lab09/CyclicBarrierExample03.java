@@ -4,7 +4,6 @@ import java.util.concurrent.CyclicBarrier;
 
 public class CyclicBarrierExample03 {
 	
-	private static boolean done = false;
 	private static final int LICZBA_W¥TKÓW = 4;
 
 	public static void main(String[] args) {
@@ -14,10 +13,7 @@ public class CyclicBarrierExample03 {
 	}
 	
 	public CyclicBarrierExample03() {
-		
 			performGaussJordan();
-			
-		
 	}
 
 	private void performGaussJordan() {
@@ -43,9 +39,6 @@ public class CyclicBarrierExample03 {
 			    	System.out.println("JOIN: Z³¹czenie wyników obliczeñ.");
 			        Thread.sleep(1000);
 			    	System.out.println("Eliminate/divide dla wszystkich w¹tków zrobione ");
-			    	if (!done) {
-			    		performGaussJordan();
-			    	}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

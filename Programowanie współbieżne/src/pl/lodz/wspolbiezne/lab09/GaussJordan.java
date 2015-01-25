@@ -2,9 +2,6 @@ package pl.lodz.wspolbiezne.lab09;
 
 import java.util.logging.Logger;
 
-import pl.lodz.wspolbiezne.lab04.MainThread;
-import pl.lodz.wspolbiezne.lab04.W¹tek;
-
 public class GaussJordan {
 
 	private static final boolean BOOLEAN = false;
@@ -25,7 +22,10 @@ public class GaussJordan {
 				if (k != i) {
 					swap(A, i, k, j);
 				}			
-				
+				if (A[i][j] != 1) {
+					divide(A, i, j);
+				}
+				eliminate(A, i, j);
 				
 				i++;
 			}
@@ -39,7 +39,6 @@ public class GaussJordan {
 	}
 
 	
-	
 	private static void swap(double[][] A, int i, int k, int j) {
 		int m = A[0].length - 1;
 		double temp;
@@ -47,6 +46,26 @@ public class GaussJordan {
 			temp = A[i][q];
 			A[i][q] = A[k][q];
 			A[k][q] = temp;
+		}
+	}
+	
+	static void divide(double[][] A, int i, int j) {
+		int m = A[0].length - 1;
+		for (int q = j + 1; q <= m; q++)
+			A[i][q] /= A[i][j];
+		A[i][j] = 1;
+	}
+
+	private static void eliminate(double[][] A, int i, int j) {
+		int n = A.length - 1;
+		int m = A[0].length - 1;
+		for (int p = 1; p <= n; p++) {
+			if (p != i && A[p][j] != 0) {
+				for (int q = j + 1; q <= m; q++) {
+					A[p][q] -= A[p][j] * A[i][q];
+				}
+				A[p][j] = 0;
+			}
 		}
 	}
 
