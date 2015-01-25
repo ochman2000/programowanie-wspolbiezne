@@ -1,4 +1,4 @@
-package pl.lodz.wspolbiezne.lab08;
+package pl.lodz.wspolbiezne.lab09;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;

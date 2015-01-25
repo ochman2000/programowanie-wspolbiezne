@@ -64,18 +64,4 @@ public class GaussJordan {
 		return sb.toString();
 	}
 	
-	private Thread[] initThreads(int threadsNumber) {
-		if (threadsNumber < 1) {
-			throw new IllegalArgumentException(
-					"Liczb¹ w¹tków musi byæ wiêksza od 0");
-		}
-		Thread[] thread = new Thread[threadsNumber];
-		for (int interval = 0; interval < threadsNumber; interval++) {
-			int pocz¹tek = MainThread.getBeginningOfInterval(interval, threadsNumber);
-			int koniec = MainThread.getEndOfInterval(interval, threadsNumber);
-			W¹tek w = new W¹tek(A, pocz¹tek, koniec, i);
-			thread[interval] = new Thread(w);
-		}
-		return thread;
-	}
 }
