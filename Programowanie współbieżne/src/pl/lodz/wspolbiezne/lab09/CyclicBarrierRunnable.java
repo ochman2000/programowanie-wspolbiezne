@@ -24,8 +24,8 @@ public class CyclicBarrierRunnable implements Runnable {
 					+ " Eliminate/divide przy barierze 2");
 			this.barrier2.await();
 
-			Thread.sleep(5000);
-			System.out.println(Thread.currentThread().getName() + " done!");
+//			Thread.sleep(5000);
+//			System.out.println(Thread.currentThread().getName() + " done!");
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
