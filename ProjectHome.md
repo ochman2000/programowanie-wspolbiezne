@@ -1,0 +1,1 @@
+Laboratoria z przedmiotu: Programowanie współbieżne na Politechnice Łódzkiej by Łukasz Ochmański
